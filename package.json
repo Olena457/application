@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Monorepo for Order Management System (Vite + NestJS + Docker)",
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "dev": "docker-compose up --build",
     "stop": "docker-compose down",
     "build": "docker-compose build",
-    "backend": "npm run dev -w apps/backend",
-    "frontend": "npm run dev -w apps/frontend"
+    "backend": "npm run start:dev --prefix apps/backend",
+    "frontend": "npm run dev --prefix apps/frontend",
+    "install:all": "npm install --prefix apps/backend && npm install --prefix apps/frontend"
   },
   "keywords": [],
   "author": "Olena Demianenko",
