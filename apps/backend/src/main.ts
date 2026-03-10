@@ -1,10 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   app.enableCors({
     origin: 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -16,14 +23,15 @@ async function bootstrap() {
     .setDescription('API documentation for the Event Platform application')
     .setVersion('1.0')
     .addTag('events')
+    .addBearerAuth() //jwt auth
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api-dock', app, document);
 
   await app.listen(4000);
   console.log(`Server running: http://localhost:4000`);
-  console.log(`Dock Swagger: http://localhost:4000/api`);
+  console.log(`Dock Swagger: http://localhost:4000/api-dock`);
 }
 bootstrap().catch((err: unknown) => {
   console.error('Error during application bootstrap', err);
