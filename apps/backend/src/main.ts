@@ -5,9 +5,15 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Event Platform API')
-    .setDescription('Документація для мого тестового завдання')
+    .setDescription('API documentation for the Event Platform application')
     .setVersion('1.0')
     .addTag('events')
     .build();

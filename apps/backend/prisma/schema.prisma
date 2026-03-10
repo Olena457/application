@@ -1,0 +1,40 @@
+model User {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  password        String
+  name            String?
+  organizedEvents Event[]       @relation("OrganizedBy")
+  participations  Participant[]
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Event {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  date        DateTime
+  location    String
+  category    String
+  organizer   User          @relation("OrganizedBy", fields: [organizerId], references: [id])
+  organizerId String        @map("organizer_id")
+  participants Participant[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
+model Participant {
+  id       String   @id @default(uuid())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String   @map("user_id")
+  event    Event    @relation(fields: [eventId], references: [id])
+  eventId  String   @map("event_id")
+  joinedAt DateTime @default(now()) @map("joined_at")
+
+  @@unique([userId, eventId])
+  @@map("participants")
+}
