@@ -15,13 +15,13 @@ export default function HomePage() {
     <Container maxWidth="md">
       <Box sx={{ py: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Привіт, {user?.name || user?.email}!
+          Hello, {user?.name || user?.email}!
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          Ви успішно авторизовані.
+          You are successfully signed in.
         </Typography>
         <Button variant="outlined" onClick={handleLogout}>
-          Вийти
+          Sign Out
         </Button>
       </Box>
     </Container>

@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import {
   Box,
   Button,
   Container,
+  IconButton,
+  InputAdornment,
   Paper,
   TextField,
   Typography,
@@ -13,14 +17,15 @@ import {
 import { useLoginMutation } from '../store/api/authApi';
 
 const loginSchema = z.object({
-  email: z.string().email('Введіть коректний email'),
-  password: z.string().min(1, 'Пароль обов\'язковий'),
+  email: z.string().email('Enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading, error }] = useLoginMutation();
 
   const {
@@ -41,6 +46,13 @@ export default function LoginPage() {
     }
   };
 
+  const apiErrorMessage =
+    error && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data
+      ? Array.isArray((error.data as { message: unknown }).message)
+        ? (error.data as { message: string[] }).message.join(', ')
+        : (error.data as { message: string }).message
+      : null;
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -54,7 +66,7 @@ export default function LoginPage() {
       >
         <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            Вхід
+            Sign In
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -71,21 +83,31 @@ export default function LoginPage() {
             />
             <TextField
               {...register('password')}
-              label="Пароль"
-              type="password"
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
               fullWidth
               margin="normal"
               autoComplete="current-password"
               error={!!errors.password}
               helperText={errors.password?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
-            {error && (
+            {apiErrorMessage && (
               <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                {Array.isArray((error as { data?: { message?: unknown } }).data?.message)
-                  ? (error as { data: { message: string[] } }).data.message.join(', ')
-                  : (error as { data?: { message?: string } }).data?.message ||
-                    'Невірний email або пароль'}
+                {apiErrorMessage}
               </Typography>
             )}
 
@@ -96,13 +118,13 @@ export default function LoginPage() {
               sx={{ mt: 3, mb: 2 }}
               disabled={isLoading}
             >
-              {isLoading ? 'Завантаження...' : 'Увійти'}
+              {isLoading ? 'Loading...' : 'Sign In'}
             </Button>
 
             <Typography variant="body2" align="center">
-              Немає акаунту?{' '}
+              Don&apos;t have an account?{' '}
               <Link to="/register" style={{ color: 'inherit' }}>
-                Зареєструватися
+                Sign Up
               </Link>
             </Typography>
           </Box>

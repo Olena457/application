@@ -23,7 +23,8 @@ async function bootstrap() {
     .setDescription('API documentation for the Event Platform application')
     .setVersion('1.0')
     .addTag('events')
-    .addBearerAuth() //jwt auth
+    .addTag('auth')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
