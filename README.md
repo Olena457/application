@@ -1,60 +1,136 @@
-# Event Management Platform
+# Event Platform
 
-A full-stack monorepo application designed for event management. This project utilizes a modern tech stack focused on performance, type safety, and scalable architecture.
+Full-stack event management application with authentication, public event listing, calendar view, and event CRUD operations.
 
 ## Tech Stack
 
 ### Frontend
-- Framework: React with Vite
-- Styling: Tailwind CSS
-- Language: TypeScript
+- React 19 + Vite + TypeScript
+- MUI (Material UI)
+- Redux Toolkit (RTK Query)
+- React Hook Form + Zod
+- React Big Calendar
+- React Router
 
 ### Backend
-- Framework: NestJS (Node.js 22)
-- API Documentation: Swagger UI
-- Database: PostgreSQL with Prisma ORM
-- Communication: REST API and WebSockets
+- NestJS 11
+- Prisma + PostgreSQL (Neon)
+- JWT Authentication
+- Swagger API Documentation
+- class-validator for DTO validation
 
 ### Infrastructure
-- Containerization: Docker and Docker Compose
-- Environment: Node.js 22 Alpine
+- Docker Compose
 
 ## Project Structure
 
-- apps/frontend: React client-side application.
-- apps/backend: NestJS server-side application.
-- docker-compose.yml: Orchestration for all services.
+```
+application/
+├── apps/
+│   ├── frontend/    # React SPA
+│   └── backend/     # NestJS API
+├── docker-compose.yml
+└── README.md
+```
 
-## Getting Started
+## Setup
 
-### Local Development
+### Prerequisites
+- Node.js 22
+- npm
 
-Prerequisites: Node.js 22 and npm installed.
+### 1. Environment Variables
 
-#### Backend Setup:
-1. Navigate to the backend directory: cd apps/backend
-2. Install dependencies: npm install
-3. Start the development server: npm run start:dev
-4. Access Swagger documentation: http://localhost:4000/api
+**Backend** (`apps/backend/.env`):
 
-#### Frontend Setup:
-1. Navigate to the frontend directory: cd apps/frontend
-2. Install dependencies: npm install
-3. Start the development server: npm run dev
-4. Access the application: http://localhost:5173
+```env
+# Database (Neon PostgreSQL)
+DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
+DIRECT_URL="postgresql://user:password@host/database?sslmode=require"
 
-### Docker Setup
+# JWT
+JWT_SECRET=your-super-secret-key-change-in-production
+JWT_EXPIRES_IN=7d
+```
 
-To build and run the entire environment (Frontend, Backend, and Database):
+Copy from `apps/backend/.env.example` and fill in your Neon database credentials.
+
+### 2. Database
+
+```bash
+cd apps/backend
+npm install
+npx prisma db push      # Sync schema with database
+npm run seed            # Seed sample data (2 users, 3 events)
+```
+
+### 3. Run Application
+
+**Option A: Docker (recommended)**
+
+From the `application` root:
+
+```bash
+npm run dev
+# or
 docker-compose up --build
+```
+
+**Option B: Local development**
+
+Terminal 1 (Backend):
+```bash
+cd apps/backend
+npm install
+npm run start:dev
+```
+
+Terminal 2 (Frontend):
+```bash
+cd apps/frontend
+npm install
+npm run dev
+```
+
+### 4. Access
+
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:4000
+- **Swagger Docs**: http://localhost:4000/api-dock
+
+## Seed Data
+
+After running `npm run seed`:
+
+- **Users**: alice@example.com, bob@example.com (password: `Password123!`)
+- **Events**: 3 public events
+- **Participant**: Bob joined one of Alice's events
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /auth/register | Register user |
+| POST | /auth/login | Login |
+| GET | /auth/me | Current user (JWT) |
+| GET | /events | Public events list |
+| GET | /events/:id | Event details |
+| POST | /events | Create event (JWT) |
+| PATCH | /events/:id | Edit event (organizer) |
+| DELETE | /events/:id | Delete event (organizer) |
+| POST | /events/:id/join | Join event (JWT) |
+| POST | /events/:id/leave | Leave event (JWT) |
+| GET | /users/me/events | User's events for calendar (JWT) |
 
 ## Features
 
-- Monorepo architecture for unified development.
-- Automated API documentation with Swagger.
-- Containerized services for consistent deployment.
-- Integrated PostgreSQL database management with Prisma.
-- Real-time event updates via WebSockets.
+- **Authentication**: Sign up, login, JWT sessions
+- **Events List**: Public events with Join/Leave
+- **Event Details**: Full info, participants, Edit/Delete for organizer
+- **Create Event**: Title, description, date/time, location, capacity, visibility
+- **My Events**: Calendar view (month/week) of user's events
+- **Responsive UI**: MUI components, mobile-friendly
 
 ## License
-This project is open-source and available under the MIT License.
+
+ISC

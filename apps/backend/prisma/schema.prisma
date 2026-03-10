@@ -27,7 +27,9 @@ model Event {
   description String?
   date        DateTime
   location    String
-  category    String
+  capacity    Int?          // null = unlimited
+  visibility  String        @default("Public") // "Public" | "Private"
+  category    String?       // optional
   organizer   User          @relation("OrganizedBy", fields: [organizerId], references: [id])
   organizerId String        @map("organizer_id")
   participants Participant[]

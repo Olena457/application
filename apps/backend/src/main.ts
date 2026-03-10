@@ -22,8 +22,9 @@ async function bootstrap() {
     .setTitle('Event Platform API')
     .setDescription('API documentation for the Event Platform application')
     .setVersion('1.0')
-    .addTag('events')
     .addTag('auth')
+    .addTag('events')
+    .addTag('users')
     .addBearerAuth()
     .build();
 
