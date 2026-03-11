@@ -17,7 +17,6 @@ Full-stack event management application with authentication, public event listin
 - Prisma + PostgreSQL (Neon)
 - JWT Authentication
 - Swagger API Documentation
-- class-validator for DTO validation
 
 ### Infrastructure
 - Docker Compose
