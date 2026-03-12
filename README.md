@@ -6,15 +6,16 @@ Full-stack event management application with authentication, public event listin
 ## Gallery
 
 <div style="display: flex; flex-wrap: wrap; gap:1px;">
-  <img src="./apps/frontend/src/assets/form.jpg" width="30%" height="130px" alt="Sign In Form"/>
-  <img src="./apps/frontend/src/assets/welcom.jpg" width="30%" height="130px" alt="Welcome Screen"/>
-  <img src="./apps/frontend/src/assets/edit.jpg" width="30%" height="130px" alt="Edit Event"/>
-  <img src="./apps/frontend/src/assets/calendar.jpg" width="30%" height="130px" alt="Events Calendar"/>
+  <img src="./apps/frontend/src/assets/form.jpg" width="25%" height="125px" alt="Sign In Form"/>
+  <img src="./apps/frontend/src/assets/welcom.jpg" width="25%" height="125px" alt="Welcome Screen"/>
+  <img src="./apps/frontend/src/assets/edit.jpg" width="25%" height="125px" alt="Edit Event"/>
+  <img src="./apps/frontend/src/assets/calendar.jpg" width="25%" height="125px" alt="Events Calendar"/>
   
-  <img src="./apps/frontend/src/assets/join.jpg" width="30%" height="130px" alt="Join Event"/>
-  <img src="./apps/frontend/src/assets/create.jpg" width="30%" height="130px" alt="Create Event"/>
-  <img src="./apps/frontend/src/assets/scedule.jpg" width="30%" height="130px" alt="Schedule View"/>
-  <img src="./apps/frontend/src/assets/swager.jpg" width="30%" height="130px" alt="Swagger"/>
+  <img src="./apps/frontend/src/assets/join.jpg" width="25%" height="125px" alt="Join Event"/>
+  <img src="./apps/frontend/src/assets/create.jpg" width="25%" height="125px" alt="Create Event"/>
+  <img src="./apps/frontend/src/assets/scedule.jpg" width="25%" height="125px" alt="Schedule View"/>
+  <img src="./apps/frontend/src/assets/swager.jpg" width="25%" height="125px" alt="Swagger"/>
+  <img src="./apps/frontend/src/assets/error.jpg" width="25%" height="125px" alt="Swagger"/>
 </div>
 
 
