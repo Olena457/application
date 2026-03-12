@@ -5,20 +5,18 @@ Full-stack event management application with authentication, public event listin
 
 ## Gallery
 
-<table>
-  <tr>
-    <td><img src="./apps/frontend/src/assets/form.jpg" alt="Sign In" width="200" height="130"/></td>
-    <td><img src="./apps/frontend/src/assets/welcom.jpg" alt="Welcome" width="200" height="130"/></td>
-    <td><img src="./apps/frontend/src/assets/edit.jpg" alt="Edit Event" width="200" height="130"/></td>
-    <td><img src="./apps/frontend/src/assets/calendar.jpg" alt="Calendar" width="200" height="130"/></td>
-  </tr>
-  <tr>
-    <td><img src="./apps/frontend/src/assets/join.jpg" alt="Join Event" width="200" height="130"/></td>
-    <td><img src="./apps/frontend/src/assets/create.jpg" alt="Create Event" width="200" height="130"/></td>
-    <td><img src="./apps/frontend/src/assets/scedule.jpg" alt="Schedule View" width="200" height="130"/></td>
-    <td><img src="./apps/frontend/src/assets/swager.jpg" alt="Swagger" width="200" height="130"/></td>
-  </tr>
-</table>
+<div style="display: flex; flex-wrap: wrap; gap:1px;">
+  <img src="./apps/frontend/src/assets/form.jpg" width="30%" height="130px" alt="Sign In Form"/>
+  <img src="./apps/frontend/src/assets/welcom.jpg" width="30%" height="130px" alt="Welcome Screen"/>
+  <img src="./apps/frontend/src/assets/edit.jpg" width="30%" height="130px" alt="Edit Event"/>
+  <img src="./apps/frontend/src/assets/calendar.jpg" width="30%" height="130px" alt="Events Calendar"/>
+  
+  <img src="./apps/frontend/src/assets/join.jpg" width="30%" height="130px" alt="Join Event"/>
+  <img src="./apps/frontend/src/assets/create.jpg" width="30%" height="130px" alt="Create Event"/>
+  <img src="./apps/frontend/src/assets/scedule.jpg" width="30%" height="130px" alt="Schedule View"/>
+  <img src="./apps/frontend/src/assets/swager.jpg" width="30%" height="130px" alt="Swagger"/>
+</div>
+
 
 ## Tech Stack
 
