@@ -129,7 +129,7 @@ export default function EventsListPage() {
           onClose={() => setOpenAlert(false)}
           severity="warning"
           variant="filled"
-          sx={{ backgroundColor: "#48ce5c", color: "#000", fontWeight: 600 }}
+          sx={{ backgroundColor: "#ff6b6b", color: "#000", fontWeight: 600 }}
           action={
             <Button
               color="inherit"

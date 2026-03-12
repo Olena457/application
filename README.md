@@ -6,15 +6,15 @@ Full-stack event management application with authentication, public event listin
 ## Gallery
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-  <img src="./src/assets/screen/dog.jpg" width="23.5%" height="130px" alt="dog" style="object-fit: cover; border-radius: 8px;"/>
-  <img src="./src/assets/screen/girl.jpg" width="23.5%" height="130px" alt="girl" style="object-fit: cover; border-radius: 8px;"/>
-  <img src="./src/assets/screen/reg.jpg" width="23.5%" height="130px" alt="register" style="object-fit: cover; border-radius: 8px;"/>
-  <img src="./src/assets/screen/log.jpg" width="23.5%" height="130px" alt="login" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./apps/frontend/src/assets/form.jpg" width="23.5%" height="130px" alt="dog" style="object-fit: cover; "/>
+  <img src="./apps/frontend/src/assets/welcom.jpg" width="23.5%" height="130px" alt="girl" style="object-fit: cover; "/>
+  <img src="./apps/frontend/src/assets/edit.jpg" width="23.5%" height="130px" alt="register" style="object-fit: cover; "/>
+  <img src="./apps/frontend/src/assets/calendar.jpg" width="23.5%" height="130px" alt="login" style="object-fit: cover; "/>
   
-  <img src="./src/assets/screen/pets.jpg" width="23.5%" height="130px" alt="pets" style="object-fit: cover; border-radius: 8px;"/>
-  <img src="./src/assets/screen/news.jpg" width="23.5%" height="130px" alt="news" style="object-fit: cover; border-radius: 8px;"/>
-  <img src="./src/assets/screen/our.jpg" width="23.5%" height="130px" alt="our friends" style="object-fit: cover; border-radius: 8px;"/>
-  <img src="./src/assets/screen/prof.jpg" width="23.5%" height="130px" alt="profile" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./apps/frontend/src/assets/join.jpg" width="23.5%" height="130px" alt="pets" style="object-fit: cover; "/>
+  <img src="./apps/frontend/src/assets/create.jpg" width="23.5%" height="130px" alt="news" style="object-fit: cover; "/>
+  <img src="./apps/frontend/src/assets/scedule.jpg" width="23.5%" height="130px" alt="our friends" style="object-fit: cover; "/>
+  <img src="./apps/frontend/src/assets/error.jpg" width="23.5%" height="130px" alt="profile" style="object-fit: cover; "/>
 </div>
 
 ## Tech Stack
