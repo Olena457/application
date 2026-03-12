@@ -9,7 +9,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import type { ToolbarProps } from "react-big-calendar";
 
-// --- Кастомна Подія (Event) ---
 export const CustomEvent = ({ event }: any) => (
   <Box sx={{ display: "flex", flexDirection: "column", py: 0.5 }}>
     <Typography
