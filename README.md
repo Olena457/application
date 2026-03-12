@@ -5,17 +5,20 @@ Full-stack event management application with authentication, public event listin
 
 ## Gallery
 
-<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-  <img src="./apps/frontend/src/assets/form.jpg" alt="Sign In Form" style="height: 130px;  object-fit: contain;"/>
-  <img src="./apps/frontend/src/assets/welcom.jpg" alt="Welcome Screen" style="height: 130px;  object-fit: contain;"/>
-  <img src="./apps/frontend/src/assets/edit.jpg" alt="Edit Event" style="height: 130px;  object-fit: contain;"/>
-  <img src="./apps/frontend/src/assets/calendar.jpg" alt="Events Calendar" style="height: 130px;  object-fit: contain;"/>
-  
-  <img src="./apps/frontend/src/assets/join.jpg" alt="Join Event" style="height: 130px;  object-fit: contain;"/>
-  <img src="./apps/frontend/src/assets/create.jpg" alt="Create Event" style="height: 130px;  object-fit: contain;"/>
-  <img src="./apps/frontend/src/assets/scedule.jpg" alt="Schedule View" style="height: 130px;  object-fit: contain;"/>
-  <img src="./apps/frontend/src/assets/swager.jpg" alt="API Documentation Swagger" style="height: 130px;  object-fit: contain;"/>
-</div>
+<table>
+  <tr>
+    <td><img src="./apps/frontend/src/assets/form.jpg" alt="Sign In" width="200" height="130"/></td>
+    <td><img src="./apps/frontend/src/assets/welcom.jpg" alt="Welcome" width="200" height="130"/></td>
+    <td><img src="./apps/frontend/src/assets/edit.jpg" alt="Edit Event" width="200" height="130"/></td>
+    <td><img src="./apps/frontend/src/assets/calendar.jpg" alt="Calendar" width="200" height="130"/></td>
+  </tr>
+  <tr>
+    <td><img src="./apps/frontend/src/assets/join.jpg" alt="Join Event" width="200" height="130"/></td>
+    <td><img src="./apps/frontend/src/assets/create.jpg" alt="Create Event" width="200" height="130"/></td>
+    <td><img src="./apps/frontend/src/assets/scedule.jpg" alt="Schedule View" width="200" height="130"/></td>
+    <td><img src="./apps/frontend/src/assets/swager.jpg" alt="Swagger" width="200" height="130"/></td>
+  </tr>
+</table>
 
 ## Tech Stack
 
