@@ -1,10 +1,10 @@
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Post, Body, UsePipes } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CurrentUser } from './decorators/current-user.decorator';
+import { registerSchema, loginSchema } from './schemas/auth.schema';
+import { YupValidationPipe } from '../common/pipes/yup-validation.pipe';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,21 +13,15 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
+  @UsePipes(new YupValidationPipe(registerSchema))
   async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+    return await this.authService.register(registerDto);
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Login user and get JWT token' })
+  @ApiOperation({ summary: 'Login user' })
+  @UsePipes(new YupValidationPipe(loginSchema))
   async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
-  }
-
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get current user profile' })
-  async getProfile(@CurrentUser() userId: string) {
-    return this.authService.findById(userId);
+    return await this.authService.login(loginDto);
   }
 }

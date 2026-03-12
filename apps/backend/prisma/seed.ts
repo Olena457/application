@@ -73,7 +73,7 @@ async function main() {
     },
   });
 
-  console.log('Seed completed: 2 users, 3 public events, 1 participant');
+  console.log('Seed completed: successfully created users');
 }
 
 main()
