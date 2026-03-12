@@ -28,7 +28,7 @@ export default function RegisterPage() {
       : null;
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="sm">
       <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', py: 4 }}>
         <Paper elevation={3} sx={{ p: 4, width: '100%', borderRadius: '16px' }}>
           <Typography variant="h5" align="center" fontWeight={600} gutterBottom>

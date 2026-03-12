@@ -1,40 +1,14 @@
-// import { useDispatch, useSelector } from 'react-redux';
-// import { Box, Button, Container, Typography } from '@mui/material';
-// import { logout } from '../store/slices/authSlice';
-// import type { RootState } from '../store';
 
-// export default function HomePage() {
-//   const dispatch = useDispatch();
-//   const user = useSelector((state: RootState) => state.auth.user);
-
-//   const handleLogout = () => {
-//     dispatch(logout());
-//   };
-
-//   return (
-//     <Container maxWidth="md">
-//       <Box sx={{ py: 4 }}>
-//         <Typography variant="h4" component="h1" gutterBottom>
-//           Hello, {user?.name || user?.email}!
-//         </Typography>
-//         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-//           You are successfully signed in.
-//         </Typography>
-//         <Button variant="outlined" onClick={handleLogout}>
-//           Sign Out
-//         </Button>
-//       </Box>
-//     </Container>
-//   );
-// }
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Container, Typography, Paper } from '@mui/material';
-import { logout } from '../store/slices/authSlice';
-import type { RootState } from '../store';
-import bgImage from '../assets/home-bg.png'; 
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; 
+import { Box, Button, Container, Typography, Paper } from "@mui/material";
+import { logout } from "../store/slices/authSlice";
+import type { RootState } from "../store";
+import bgImage from "../assets/home-bg.png";
 
 export default function HomePage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
 
   const handleLogout = () => {
@@ -66,32 +40,52 @@ export default function HomePage() {
           }}
         >
           <Typography
-            variant="h4"
-            component="h5"
+            variant="h4" 
+            component="h1"
             gutterBottom
-            sx={{ fontWeight: "bold", color: "#1976d2" }}
+            sx={{
+              fontWeight: "bold",
+              color: "#1976d2",
+              fontSize: { xs: "1.5rem", sm: "2rem" },
+            }}
           >
-            Welcome, {user?.name?.split(" ")[0] || "Friend"}!
+            {user
+              ? `Welcome, ${user.name?.split(" ")[0]}!`
+              : "Welcome to Event Platform!"}
           </Typography>
+
           <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
-            Ready to discover or create amazing events? You are successfully
-            signed in.
+            {user
+              ? "Ready to discover or create amazing events? You are successfully signed in."
+              : "Login to your account to join exciting events and manage your own schedule."}
           </Typography>
+
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="contained"
-              onClick={() => (window.location.href = "/events")}
+              onClick={() => navigate("/events")}
               sx={{ textTransform: "none" }}
             >
               Explore Events
             </Button>
-            <Button
-              variant="outlined"
-              onClick={handleLogout}
-              sx={{ textTransform: "none" }}
-            >
-              Sign Out
-            </Button>
+
+            {user ? (
+              <Button
+                variant="outlined"
+                onClick={handleLogout}
+                sx={{ textTransform: "none" }}
+              >
+                Sign Out
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                onClick={() => navigate("/login")}
+                sx={{ textTransform: "none" }}
+              >
+                Sign In
+              </Button>
+            )}
           </Box>
         </Paper>
       </Container>

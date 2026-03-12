@@ -1,7 +1,7 @@
 
-import { Box, Typography, Paper, Stack } from "@mui/material";
-import { format, isSameDay, startOfWeek, addDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { format, isSameDay, startOfWeek, addDays } from "date-fns";
+import { Box, Typography, Paper, Stack } from "@mui/material";
 
 interface WeeklyViewProps {
   currentDate: Date;

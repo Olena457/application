@@ -21,6 +21,7 @@ interface EventCardProps {
   onEdit: () => void;
   isLoading: boolean;
   viewLabel?: string;
+  isLoggedIn?: boolean; 
 }
 
 export const EventCard = ({
@@ -33,6 +34,7 @@ export const EventCard = ({
   onEdit,
   isLoading,
   viewLabel = "Details",
+  isLoggedIn = false, 
 }: EventCardProps) => {
   const count =
     event._count?.participants ??
@@ -58,6 +60,7 @@ export const EventCard = ({
         flexDirection: "column",
         borderRadius: 2,
         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+        overflow: "hidden",
       }}
     >
       <CardContent sx={{ flexGrow: 1 }}>
@@ -98,71 +101,98 @@ export const EventCard = ({
         </Box>
       </CardContent>
 
-      <CardActions sx={{ p: 2, pt: 0, gap: 1 }}>
-        <Button
-          fullWidth
-          size="small"
-          variant="contained"
-          color="primary"
-          onClick={onView}
-          sx={{
-            textTransform: "none",
-            fontWeight: 600,
-            "&:focus": { outline: "none" },
-          }}
-        >
-          {viewLabel}
-        </Button>
+      <CardActions sx={{ p: 2, pt: 0 }}>
+        {isLoggedIn ? (
+          <Box sx={{ display: "flex", gap: 1, width: "100%" }}>
+            <Button
+              fullWidth
+              size="small"
+              variant="contained"
+              color="primary"
+              onClick={onView}
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                "&:focus": { outline: "none" },
+              }}
+            >
+              {viewLabel}
+            </Button>
 
-        {isOrganizer ? (
-          <Button
-            fullWidth
-            size="small"
-            variant="contained"
-            onClick={onEdit}
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              backgroundColor: "#1976d2",
-              borderColor: "#e0e0e0",
-              "&:hover": { borderColor: "#1976d2", backgroundColor: "#195da1" },
-              "&:focus": { outline: "none" },
-            }}
-          >
-            Edit
-          </Button>
-        ) : isParticipant ? (
-          <Button
-            fullWidth
-            size="small"
-            variant="contained"
-            color="error"
-            onClick={onLeave}
-            disabled={isLoading}
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              backgroundColor: "#ff6b6b",
-              "&:hover": { backgroundColor: "#fa5252" },
-              "&:focus": { outline: "none" },
-            }}
-          >
-            Leave
-          </Button>
+            {isOrganizer ? (
+              <Button
+                fullWidth
+                size="small"
+                variant="contained"
+                onClick={onEdit}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  backgroundColor: "#2E8B57",
+                  "&:hover": { backgroundColor: "#37a768" },
+                  "&:focus": { outline: "none" },
+                }}
+              >
+                Edit
+              </Button>
+            ) : isParticipant ? (
+              <Button
+                fullWidth
+                size="small"
+                variant="contained"
+                color="error"
+                onClick={onLeave}
+                disabled={isLoading}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  backgroundColor: "#ff6b6b",
+                  "&:hover": { backgroundColor: "#fa5252" },
+                  "&:focus": { outline: "none" },
+                }}
+              >
+                Leave
+              </Button>
+            ) : (
+              <Button
+                fullWidth
+                size="small"
+                variant="contained"
+                onClick={onJoin}
+                disabled={isFull || isLoading}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  "&:focus": { outline: "none" },
+                }}
+              >
+                Join
+              </Button>
+            )}
+          </Box>
         ) : (
           <Button
             fullWidth
-            size="small"
+            size="large"
             variant="contained"
+            color="primary"
             onClick={onJoin}
-            disabled={isFull || isLoading}
+            disabled={isLoading}
             sx={{
               textTransform: "none",
-              fontWeight: 600,
+              fontWeight: 700,
+              py: 1,
+              borderRadius: "8px",
+              backgroundColor: "#2E8B57",
+              boxShadow: 1,
+              "&:hover": {
+                backgroundColor: "#37a768",
+                boxShadow: 2,
+              },
               "&:focus": { outline: "none" },
             }}
           >
-            Join
+            Join Event
           </Button>
         )}
       </CardActions>

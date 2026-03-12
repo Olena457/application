@@ -4,14 +4,16 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Box, Paper, Typography, CircularProgress, Alert, Button } from "@mui/material";
+import { EventForm } from "../components/EventForm";
+import type { EventFormData } from "../components/EventForm";
+import type { RootState } from "../store";
+
 import {
   useGetEventQuery,
   useUpdateEventMutation,
 } from "../store/api/eventsApi";
-import { EventForm } from "../components/EventForm";
-import type { EventFormData } from "../components/EventForm";
-import type { RootState } from "../store";
+import { Box, Paper, Typography, CircularProgress, Alert, Button } from "@mui/material";
+
 
 export default function EditEventPage() {
   const { id } = useParams<{ id: string }>();

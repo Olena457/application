@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -13,17 +14,31 @@ import {
   Alert,
 } from "@mui/material";
 
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const nameRegex = /^[a-zA-Za-яА-ЯіІїЇєЄґҐ' ]+$/;
+
 const registerSchema = yup
   .object({
     email: yup
       .string()
-      .email("Enter a valid email address")
+      .matches(emailRegex, "Please enter a valid email address")
       .required("Email is required"),
+    name: yup
+      .string()
+      .max(50, "Name is too long")
+      .matches(nameRegex, "Name must contain only letters")
+      .optional()
+      .default(""),
     password: yup
       .string()
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        passwordRegex,
+        "Password must include uppercase, lowercase, number and special character",
+      )
       .required("Password is required"),
-    name: yup.string().optional().default(""),
   })
   .required();
 
@@ -56,25 +71,41 @@ export const RegisterForm = ({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(handleFormSubmit)}
+      noValidate
+      sx={{
+        width: "100%",
+        maxWidth: 490,
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+      }}
+    >
       <TextField
         {...register("email")}
         label="Email"
+        placeholder="example@mail.com"
         fullWidth
         margin="normal"
         error={!!errors.email}
         helperText={errors.email?.message}
         disabled={isLoading}
       />
+
       <TextField
         {...register("name")}
-        label="Name (optional)"
+        label="Name (optionally: surname)"
+        placeholder="Your name"
         fullWidth
         margin="normal"
         error={!!errors.name}
         helperText={errors.name?.message}
         disabled={isLoading}
       />
+
       <TextField
         {...register("password")}
         label="Password"
@@ -109,7 +140,7 @@ export const RegisterForm = ({
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2, py: 1.2, fontWeight: 600 }}
+        sx={{ mt: 3, mb: 2, py: 1.5, fontWeight: 600 }}
         disabled={isLoading}
       >
         {isLoading ? "Creating account..." : "Sign Up"}

@@ -2,19 +2,34 @@
 
 Full-stack event management application with authentication, public event listing, calendar view, and event CRUD operations.
 
+
+## Gallery
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+  <img src="./src/assets/screen/dog.jpg" width="23.5%" height="130px" alt="dog" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./src/assets/screen/girl.jpg" width="23.5%" height="130px" alt="girl" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./src/assets/screen/reg.jpg" width="23.5%" height="130px" alt="register" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./src/assets/screen/log.jpg" width="23.5%" height="130px" alt="login" style="object-fit: cover; border-radius: 8px;"/>
+  
+  <img src="./src/assets/screen/pets.jpg" width="23.5%" height="130px" alt="pets" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./src/assets/screen/news.jpg" width="23.5%" height="130px" alt="news" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./src/assets/screen/our.jpg" width="23.5%" height="130px" alt="our friends" style="object-fit: cover; border-radius: 8px;"/>
+  <img src="./src/assets/screen/prof.jpg" width="23.5%" height="130px" alt="profile" style="object-fit: cover; border-radius: 8px;"/>
+</div>
+
 ## Tech Stack
 
 ### Frontend
 - React 19 + Vite + TypeScript
 - MUI (Material UI)
 - Redux Toolkit (RTK Query)
-- React Hook Form + Zod
+- React Hook Form + Yup
 - React Big Calendar
 - React Router
 
 ### Backend
 - NestJS 11
-- Prisma + PostgreSQL (Neon)
+- Prisma + PostgreSQL 
 - JWT Authentication
 - Swagger API Documentation
 
@@ -59,8 +74,7 @@ Copy from `apps/backend/.env.example` and fill in your Neon database credentials
 ```bash
 cd apps/backend
 npm install
-npx prisma db push      # Sync schema with database
-npm run seed            # Seed sample data (2 users, 3 events)
+npx prisma       
 ```
 
 ### 3. Run Application

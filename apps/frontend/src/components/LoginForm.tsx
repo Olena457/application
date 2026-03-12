@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -17,12 +18,9 @@ const loginSchema = yup
   .object({
     email: yup
       .string()
-      .email("Enter a valid email address")
+      .email("Invalid email format")
       .required("Email is required"),
-    password: yup
-      .string()
-      .min(1, "Password is required")
-      .required("Password is required"),
+    password: yup.string().required("Password is required"),
   })
   .required();
 
@@ -55,7 +53,19 @@ export const LoginForm = ({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(handleFormSubmit)}
+      noValidate
+      sx={{
+        width: "100%",
+        maxWidth: 490,
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+      }}
+    >
       <TextField
         {...register("email")}
         label="Email"
@@ -83,7 +93,7 @@ export const LoginForm = ({
               <IconButton
                 onClick={() => setShowPassword(!showPassword)}
                 edge="end"
-                type="button" 
+                type="button"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </IconButton>
@@ -102,7 +112,7 @@ export const LoginForm = ({
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2, py: 1.2, fontWeight: 600 }}
+        sx={{ mt: 3, mb: 2, py: 1.5, fontWeight: 600 }}
         disabled={isLoading}
       >
         {isLoading ? "Signing in..." : "Sign In"}

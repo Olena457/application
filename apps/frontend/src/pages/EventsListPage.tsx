@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { RefreshCw } from "lucide-react";
 import {
   Box,
   Typography,
@@ -9,8 +10,8 @@ import {
   Alert,
   AlertTitle,
   Button,
+  Snackbar,
 } from "@mui/material";
-import { RefreshCw } from "lucide-react";
 
 import {
   useGetPublicEventsQuery,
@@ -18,19 +19,32 @@ import {
   useLeaveEventMutation,
 } from "../store/api/eventsApi";
 import type { RootState } from "../store";
-import { EventCard } from "../components/EventCard";
+import { EventsList } from "../components/EventsList"; 
 import { SearchBar } from "../components/SearchBar";
 
 export default function EventsListPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
 
+  const token = useSelector((state: RootState) => state.auth.token);
   const userId = useSelector((state: RootState) => state.auth.user?.id);
 
   const { data: events, isLoading, error, refetch } = useGetPublicEventsQuery();
-
   const [joinEvent, { isLoading: isJoining }] = useJoinEventMutation();
   const [leaveEvent, { isLoading: isLeaving }] = useLeaveEventMutation();
+
+  const handleJoinAction = async (eventId: string) => {
+    if (!token) {
+      setOpenAlert(true);
+      return;
+    }
+    try {
+      await joinEvent(eventId).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const filteredEvents = useMemo(() => {
     if (!events) return [];
@@ -75,8 +89,7 @@ export default function EventsListPage() {
           }
         >
           <AlertTitle>Loading Error</AlertTitle>
-          Failed to fetch events list. Please check your internet connection or
-          try again later.
+          Failed to fetch events list.
         </Alert>
       </Box>
     );
@@ -93,37 +106,44 @@ export default function EventsListPage() {
 
       <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-        {filteredEvents.map((event) => (
-          <Box
-            key={event.id}
-            sx={{ flex: "1 1 300px", minWidth: 0, maxWidth: 400 }}
-          >
-            <EventCard
-              event={event}
-              isParticipant={
-                event.participants?.some(
-                  (p) => (p.user?.id ?? p.userId) === userId,
-                ) ?? false
-              }
-              isOrganizer={event.organizerId === userId}
-              onEdit={() => navigate(`/events/${event.id}/edit`)}
-              onJoin={() => joinEvent(event.id)}
-              onLeave={() => leaveEvent(event.id)}
-              onView={() => navigate(`/events/${event.id}`)}
-              isLoading={isJoining || isLeaving}
-            />
-          </Box>
-        ))}
-      </Box>
+      <EventsList
+        events={filteredEvents}
+        userId={userId}
+        token={token}
+        isJoining={isJoining}
+        isLeaving={isLeaving}
+        onJoin={handleJoinAction}
+        onLeave={(id) => leaveEvent(id)}
+        onEdit={(id) => navigate(`/events/${id}/edit`)}
+        onView={(id) => navigate(`/events/${id}`)}
+        searchQuery={searchQuery}
+      />
 
-      {filteredEvents.length === 0 && (
-        <Typography color="text.secondary" sx={{ mt: 4, textAlign: "center" }}>
-          {searchQuery
-            ? `No results found for "${searchQuery}".`
-            : "No events available at the moment."}
-        </Typography>
-      )}
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setOpenAlert(false)}
+          severity="warning"
+          variant="filled"
+          sx={{ backgroundColor: "#48ce5c", color: "#000", fontWeight: 600 }}
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/login")}
+              sx={{ fontWeight: "bold", textDecoration: "underline" }}
+            >
+              Login Now
+            </Button>
+          }
+        >
+          Please sign in to join events!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
