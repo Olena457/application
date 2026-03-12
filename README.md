@@ -5,18 +5,16 @@ Full-stack event management application with authentication, public event listin
 
 ## Gallery
 
-## 📷 Gallery
-
-<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: stretch;">
-  <img src="./apps/frontend/src/assets/form.jpg" width="23.5%" height="160px" alt="Sign In Form" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
-  <img src="./apps/frontend/src/assets/welcom.jpg" width="23.5%" height="160px" alt="Welcome Screen" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
-  <img src="./apps/frontend/src/assets/edit.jpg" width="23.5%" height="160px" alt="Edit Event" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
-  <img src="./apps/frontend/src/assets/calendar.jpg" width="23.5%" height="160px" alt="Events Calendar" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+  <img src="./apps/frontend/src/assets/form.jpg" alt="Sign In Form" style="height: 130px;  object-fit: contain;"/>
+  <img src="./apps/frontend/src/assets/welcom.jpg" alt="Welcome Screen" style="height: 130px;  object-fit: contain;"/>
+  <img src="./apps/frontend/src/assets/edit.jpg" alt="Edit Event" style="height: 130px;  object-fit: contain;"/>
+  <img src="./apps/frontend/src/assets/calendar.jpg" alt="Events Calendar" style="height: 130px;  object-fit: contain;"/>
   
-  <img src="./apps/frontend/src/assets/join.jpg" width="23.5%" height="160px" alt="Join Event" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
-  <img src="./apps/frontend/src/assets/create.jpg" width="23.5%" height="160px" alt="Create Event" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
-  <img src="./apps/frontend/src/assets/scedule.jpg" width="23.5%" height="160px" alt="Schedule View" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
-  <img src="./apps/frontend/src/assets/swager.jpg" width="23.5%" height="160px" alt="API Documentation Swagger" style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"/>
+  <img src="./apps/frontend/src/assets/join.jpg" alt="Join Event" style="height: 130px;  object-fit: contain;"/>
+  <img src="./apps/frontend/src/assets/create.jpg" alt="Create Event" style="height: 130px;  object-fit: contain;"/>
+  <img src="./apps/frontend/src/assets/scedule.jpg" alt="Schedule View" style="height: 130px;  object-fit: contain;"/>
+  <img src="./apps/frontend/src/assets/swager.jpg" alt="API Documentation Swagger" style="height: 130px;  object-fit: contain;"/>
 </div>
 
 ## Tech Stack
