@@ -1,6 +1,4 @@
 
-
-
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -14,15 +12,8 @@ import {
   Divider,
   Skeleton,
   ListItemIcon,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Snackbar,
-  Alert,
 } from "@mui/material";
+
 import {
   useGetEventQuery,
   useJoinEventMutation,
@@ -31,36 +22,64 @@ import {
 } from "../store/api/eventsApi";
 import type { RootState } from "../store";
 import { EventCard } from "../components/EventCard";
+import { ConfirmDialog } from "../components/ConfirmDialog";
+import { AuthAlert } from "../components/AuthAlert";
 
 export default function EventDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
   const userId = useSelector((state: RootState) => state.auth.user?.id);
   const token = useSelector((state: RootState) => state.auth.token);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
+  const [alertConfig, setAlertConfig] = useState<{
+    open: boolean;
+    message: string;
+    severity: "warning" | "info" | "success" | "error";
+    showLogin: boolean;
+  }>({
+    open: false,
+    message: "",
+    severity: "warning",
+    showLogin: false,
+  });
 
   const {
     data: event,
     isLoading,
     error,
   } = useGetEventQuery(id!, { skip: !id });
-
   const [joinEvent, { isLoading: isJoining }] = useJoinEventMutation();
   const [leaveEvent, { isLoading: isLeaving }] = useLeaveEventMutation();
-  const [deleteEvent] = useDeleteEventMutation();
+  const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
 
-  const handleDeleteClick = () => setOpenDeleteDialog(true);
-  const handleDeleteClose = () => setOpenDeleteDialog(false);
+
+  const isParticipant =
+    event?.participants?.some((p) => (p.user?.id ?? p.userId) === userId) ??
+    false;
+  const isOrganizer = event?.organizerId === userId;
 
   const handleJoinAction = async () => {
     if (!token) {
-      setOpenAlert(true);
+      setAlertConfig({
+        open: true,
+        message: "Please sign in to join events!",
+        severity: "warning",
+        showLogin: true,
+      });
       return;
     }
+
     try {
+      
       await joinEvent(event!.id).unwrap();
+      setAlertConfig({
+        open: true,
+        message: "Successfully joined!",
+        severity: "success",
+        showLogin: false,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -87,23 +106,19 @@ export default function EventDetailsPage() {
   }
 
   if (error || !event) {
-    return <Typography color="error">Event not found.</Typography>;
+    return (
+      <Typography color="error" sx={{ mt: 4, textAlign: "center" }}>
+        Event not found.
+      </Typography>
+    );
   }
-
-  const isOrganizer = event.organizerId === userId;
-  const isParticipant =
-    event.participants?.some((p) => (p.user?.id ?? p.userId) === userId) ??
-    false;
 
   return (
     <Box sx={{ py: 4 }}>
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: "minmax(350px, 1fr) 1.5fr",
-          },
+          gridTemplateColumns: { xs: "1fr", md: "minmax(350px, 1fr) 1.5fr" },
           gap: 3,
           width: "100%",
         }}
@@ -116,7 +131,7 @@ export default function EventDetailsPage() {
             isParticipant={isParticipant}
             isLoggedIn={!!token}
             isOrganizer={isOrganizer}
-            onDelete={handleDeleteClick}
+            onDelete={() => setOpenDeleteDialog(true)}
             onJoin={handleJoinAction}
             onLeave={() => leaveEvent(event.id)}
             onEdit={() => navigate(`/events/${event.id}/edit`)}
@@ -134,7 +149,7 @@ export default function EventDetailsPage() {
           }}
         >
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-            Participants
+            Participants ({event.participants?.length || 0})
           </Typography>
           <Divider sx={{ mb: 2 }} />
           <List sx={{ flexGrow: 1, overflowY: "auto", maxHeight: "450px" }}>
@@ -158,10 +173,7 @@ export default function EventDetailsPage() {
                   <ListItemText
                     primary={p.user?.name || "Anonymous User"}
                     slotProps={{
-                      primary: {
-                        variant: "body1",
-                        fontWeight: 500,
-                      },
+                      primary: { variant: "body1", fontWeight: 500 },
                     }}
                   />
                 </ListItem>
@@ -169,7 +181,7 @@ export default function EventDetailsPage() {
             ) : (
               <Box sx={{ py: 4, textAlign: "center" }}>
                 <Typography variant="body2" color="text.secondary">
-                  No participants for this event yet.
+                  No participants yet.
                 </Typography>
               </Box>
             )}
@@ -177,58 +189,23 @@ export default function EventDetailsPage() {
         </Paper>
       </Box>
 
-      <Dialog
+      <ConfirmDialog
         open={openDeleteDialog}
-        onClose={handleDeleteClose}
-        disableRestoreFocus
-      >
-        <DialogTitle sx={{ fontWeight: "bold" }}>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this event? This action cannot be
-            undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleDeleteClose} variant="outlined">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-            autoFocus
-          >
-            Yes, Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onClose={() => setOpenDeleteDialog(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirm Deletion"
+        description="Are you sure you want to delete this event?"
+        confirmLabel="Yes, Delete"
+        isLoading={isDeleting}
+      />
 
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={() => setOpenAlert(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setOpenAlert(false)}
-          severity="warning"
-          variant="filled"
-          sx={{ backgroundColor: "#ff6b6b", color: "#000", fontWeight: 600 }}
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => navigate("/login")}
-              sx={{ fontWeight: "bold", textDecoration: "underline" }}
-            >
-              Login Now
-            </Button>
-          }
-        >
-          Please sign in to join events!
-        </Alert>
-      </Snackbar>
+      <AuthAlert
+        open={alertConfig.open}
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        showLoginButton={alertConfig.showLogin}
+        onClose={() => setAlertConfig((prev) => ({ ...prev, open: false }))}
+      />
     </Box>
   );
 }

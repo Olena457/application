@@ -25,7 +25,10 @@ export const eventSchema = yup
   .object({
     title: yup.string().required("Title is required").min(3, "Title too short"),
     description: yup.string().optional().default(""),
-    date: yup.date().required("Date is required"),
+    date: yup
+      .date()
+      .required("Date is required")
+      .min(new Date(), "Date cannot be in the past"),
     location: yup.string().required("Location is required"),
     capacity: yup
       .number()
@@ -41,7 +44,6 @@ export const eventSchema = yup
       .oneOf(["Public", "Private"])
       .required()
       .default("Public"),
-      
   })
   .required();
 
@@ -139,6 +141,7 @@ export const EventForm = ({
         />
         <DateTimePicker
           label="Date & Time"
+          disablePast
           value={dateValue}
           onChange={(v) =>
             setValue("date", v || new Date(), { shouldValidate: true })
@@ -237,8 +240,9 @@ export const EventForm = ({
               flex: 1,
               borderRadius: "10px",
               textTransform: "none",
+              fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
               py: 1,
-              fontWeight: 600,
+              fontWeight: 500,
               backgroundColor: "#1976d2",
               "&:hover": { backgroundColor: "#0582ff" },
             }}
@@ -253,8 +257,9 @@ export const EventForm = ({
               flex: 1,
               borderRadius: "10px",
               textTransform: "none",
+              fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
               py: 1,
-              fontWeight: 600,
+              fontWeight: 500,
               backgroundColor: "#1976d2",
               "&:hover": { backgroundColor: "#0582ff" },
             }}

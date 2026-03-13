@@ -1,7 +1,5 @@
 
-
-
-import {  useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -19,7 +17,7 @@ import { enUS } from "date-fns/locale";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useGetMyEventsQuery } from "../store/api/eventsApi";
-import { WeeklyCalendarView } from "../components/WeeklyCalendarView"; 
+import { WeeklyCalendarView } from "../components/WeeklyCalendarView";
 
 const locales = { "en-US": enUS };
 const localizer = dateFnsLocalizer({
@@ -49,9 +47,9 @@ export default function MyEventsPage() {
     }));
   }, [events]);
 
-  const handleNavigate = (action: "PREV" | "NEXT" ) => {
+  const handleNavigate = (action: "PREV" | "NEXT") => {
     if (view === Views.MONTH) {
-      if (action === "PREV") setDate((prev) => addDays(prev, -30)); 
+      if (action === "PREV") setDate((prev) => addDays(prev, -30));
       if (action === "NEXT") setDate((prev) => addDays(prev, 30));
     } else {
       if (action === "PREV") setDate((prev) => subDays(prev, 7));
@@ -64,7 +62,7 @@ export default function MyEventsPage() {
   return (
     <Box
       sx={{
-        p: 4,
+        p: { xs: 2, sm: 4 },
         maxWidth: "1560px",
         width: "100%",
         margin: "0 auto",
@@ -75,13 +73,22 @@ export default function MyEventsPage() {
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
           justifyContent: "space-between",
-          alignItems: "flex-end",
+          alignItems: { xs: "flex-start", sm: "flex-end" },
           mb: 3,
+          gap: 2,
         }}
       >
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: 0 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              mb: 0,
+              fontSize: { xs: "1.75rem", sm: "2.125rem" },
+            }}
+          >
             My Events
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 0.25 }}>
@@ -90,20 +97,29 @@ export default function MyEventsPage() {
         </Box>
         <Button
           variant="contained"
+          fullWidth={{ xs: true, sm: false } as any}
           startIcon={<Plus size={18} />}
-          onClick={() => navigate("/create-event")}
+          onClick={() => navigate("/events/create")}
+          sx={{ textTransform: "none" }}
         >
           Create Event
         </Button>
       </Box>
 
       <Stack
-        direction="row"
+        direction={{ xs: "column", md: "row" }}
         justifyContent="space-between"
         alignItems="center"
         sx={{ mb: 3 }}
+        spacing={2}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          justifyContent="center"
+          sx={{ width: { xs: "100%", md: "auto" } }}
+        >
           <IconButton
             onClick={() => handleNavigate("PREV")}
             sx={{
@@ -112,7 +128,7 @@ export default function MyEventsPage() {
               boxShadow: 1,
               transition: "all 0.2s ease-in-out",
               width: "36px",
-
+              backgroundColor: "#fff",
               "&:hover": {
                 borderColor: "#1976d2",
                 color: "#1976d2",
@@ -130,8 +146,8 @@ export default function MyEventsPage() {
           <Typography
             sx={{
               fontWeight: 600,
-              fontSize: "1.25rem",
-              minWidth: "180px",
+              fontSize: { xs: "1.1rem", sm: "1.25rem" },
+              minWidth: { xs: "140px", sm: "180px" },
               textAlign: "center",
             }}
           >
@@ -148,7 +164,7 @@ export default function MyEventsPage() {
               boxShadow: 1,
               transition: "all 0.2s ease-in-out",
               width: "36px",
-
+              backgroundColor: "#fff",
               "&:hover": {
                 borderColor: "#1976d2",
                 color: "#1976d2",
@@ -164,15 +180,18 @@ export default function MyEventsPage() {
             <ChevronRight size={20} />
           </IconButton>
         </Stack>
+
         <ToggleButtonGroup
           value={view}
           exclusive
           onChange={(_, v) => v && setView(v)}
           sx={{
-            gap: 1,
+            gap: 1, 
+            width: { xs: "100%", md: "auto" },
             "& .MuiToggleButtonGroup-grouped": {
-              border: "1px solid #e5e7eb",
-              borderRadius: "8px ",
+              flex: { xs: 1, md: "none" },
+              border: "1px solid #e5e7eb ", 
+              borderRadius: "8px",
               textTransform: "none",
               px: 3,
               py: 0.5,
@@ -201,22 +220,23 @@ export default function MyEventsPage() {
       {view === Views.MONTH ? (
         <Box
           sx={{
-            height: 600,
+            height: { xs: 500, sm: 600 },
             width: "100%",
             backgroundColor: "#ffffff",
             "& .rbc-calendar": { fontFamily: "inherit" },
             "& .rbc-header": {
-              padding: "12px",
+              padding: { xs: "6px", sm: "12px" },
               fontWeight: 600,
               backgroundColor: "#f5f4f5",
               borderBottom: "1px solid #e5e7eb",
               borderLeft: "none",
               color: "#374151",
+              fontSize: { xs: "0.75rem", sm: "0.9rem" },
             },
             "& .rbc-event": {
               backgroundColor: "#EAF6FF",
               color: "#1976d2",
-              fontSize: "14px",
+              fontSize: { xs: "11px", sm: "14px" },
               padding: "1px 5px",
               borderRadius: "4px",
               border: "1px solid #dbeafe",
@@ -227,7 +247,7 @@ export default function MyEventsPage() {
             "& .rbc-date-cell": {
               textAlign: "left",
               padding: "8px",
-              fontSize: "0.9rem",
+              fontSize: { xs: "0.8rem", sm: "0.9rem" },
               color: "#6b7280",
               display: "flex",
               justifyContent: "flex-start",
@@ -235,7 +255,6 @@ export default function MyEventsPage() {
             "& .rbc-today": {
               backgroundColor: "transparent !important",
               position: "relative",
-
               "&::before": {
                 content: '""',
                 position: "absolute",
@@ -246,7 +265,6 @@ export default function MyEventsPage() {
                 backgroundColor: "#1976d2",
                 zIndex: 2,
               },
-
               "&::after": {
                 content: '""',
                 position: "absolute",

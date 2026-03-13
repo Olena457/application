@@ -23,7 +23,6 @@ export class YupValidationPipe implements PipeTransform {
       return validatedValue;
     } catch (err: unknown) {
       if (err instanceof ValidationError) {
-        console.log('YUP VALIDATION ERROR:', err.errors);
         throw new BadRequestException({
           message: 'Validation failed',
           errors: err.inner.map((e: ValidationError) => ({

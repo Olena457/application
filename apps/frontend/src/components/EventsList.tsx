@@ -1,3 +1,4 @@
+
 import { Box, Typography } from "@mui/material";
 import { EventCard } from "./EventCard";
 import type { Event } from "../types/event";
@@ -11,6 +12,7 @@ interface EventsListProps {
   onJoin: (id: string) => void;
   onLeave: (id: string) => void;
   onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
   onView: (id: string) => void;
   searchQuery: string;
 }
@@ -24,6 +26,7 @@ export const EventsList = ({
   onJoin,
   onLeave,
   onEdit,
+  onDelete,
   onView,
   searchQuery,
 }: EventsListProps) => {
@@ -39,28 +42,43 @@ export const EventsList = ({
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-      {events.map((event) => (
-        <Box
-          key={event.id}
-          sx={{ flex: "1 1 300px", minWidth: 0, maxWidth: 400 }}
-        >
-          <EventCard
-            event={event}
-            isLoggedIn={!!token}
-            isParticipant={
-              event.participants?.some(
-                (p) => (p.user?.id ?? p.userId) === userId,
-              ) ?? false
-            }
-            isOrganizer={event.organizerId === userId}
-            onEdit={() => onEdit(event.id)}
-            onJoin={() => onJoin(event.id)}
-            onLeave={() => onLeave(event.id)}
-            onView={() => onView(event.id)}
-            isLoading={isJoining || isLeaving}
-          />
-        </Box>
-      ))}
+      {events.map((event) => {
+        const isParticipant =
+          event.participants?.some((p) => {
+            const participantId = p.id || p.userId || p.user?.id;
+            return String(participantId) === String(userId);
+          }) ?? false;
+        
+       
+
+        const isOrganizer = userId
+          ? String(event.organizerId) === String(userId)
+          : false;
+        return (
+          <Box
+            key={event.id}
+            sx={{
+              flex: "1 1 300px",
+              minWidth: 0,
+              maxWidth: { xs: "100%", sm: "400px" },
+              justifyContent: { xs: "center", sm: "flex-start" },
+            }}
+          >
+            <EventCard
+              event={event}
+              isLoggedIn={!!token}
+              isParticipant={isParticipant}
+              isOrganizer={isOrganizer}
+              onEdit={() => onEdit(event.id)}
+              onJoin={() => onJoin(event.id)}
+              onDelete={() => onDelete(event.id)}
+              onLeave={() => onLeave(event.id)}
+              onView={() => onView(event.id)}
+              isLoading={isJoining || isLeaving}
+            />
+          </Box>
+        );
+      })}
     </Box>
   );
 };

@@ -36,8 +36,10 @@ export const eventsApi = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Events', 'MyEvents'],
+        invalidatesTags: ['Events', 'MyEvents'],
+
     }),
+
     updateEvent: builder.mutation<Event, { id: string; data: UpdateEventRequest }>({
       query: ({ id, data }) => ({
         url: `/events/${id}`,
@@ -99,3 +101,5 @@ export const {
   useLeaveEventMutation,
   useGetMyEventsQuery,
 } = eventsApi;
+
+
