@@ -13,6 +13,7 @@ services:
     volumes:
       - ./apps/backend:/app
       - /app/node_modules
+     # - /app/dist
     restart: always
 
   frontend:
@@ -27,6 +28,7 @@ services:
     volumes:
       - ./apps/frontend:/app
       - /app/node_modules
+      #- /app/dist
     depends_on:
       - backend
     restart: always

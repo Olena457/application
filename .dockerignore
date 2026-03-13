@@ -1,33 +1,42 @@
 # Dependencies
-# Ignore all node_modules folders (Docker will install dependencies inside the container)
 node_modules
 **/node_modules
 
 # Build artifacts
-# Ignore compiled output and framework-specific build directories
 dist
+**/dist
 build
 .next
 out
+*.tsbuildinfo
 
 # Logs and temporary files
-# Prevent debug and log files from being copied into the image
 *.log
 npm-debug.log*
 yarn-debug.log*
+.temp
+.tmp
 
-# Git and ignore files
-# These are only relevant locally, not inside the container
+# Git and configuration
 .git
 .gitignore
 .dockerignore
+Dockerfile
+docker-compose.yml
+README.md
+LICENSE
+
+# Environment variables
+.env
+*.env
+!.env.example
 
 # System files
-# Common OS-specific files should not be included
 .DS_Store
 Thumbs.db
 
-# Docker configuration files
-# Dockerfile and docker-compose.yml are used only for building/running, not inside the image
-Dockerfile
-docker-compose.yml
+# IDEs and Tools
+.vscode
+.idea
+.eslintcache
+.vite
