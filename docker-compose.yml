@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   backend:
-    build: ./apps/backend
+    build: 
+      context: .
+      dockerfile: apps/backend/Dockerfile
     container_name: backend_service
     ports:
       - "4000:4000"
@@ -11,9 +13,12 @@ services:
     volumes:
       - ./apps/backend:/app
       - /app/node_modules
+    restart: always
 
   frontend:
-    build: ./apps/frontend
+    build: 
+      context: .
+      dockerfile: apps/frontend/Dockerfile
     container_name: frontend_service
     ports:
       - "5173:5173"
@@ -22,3 +27,6 @@ services:
     volumes:
       - ./apps/frontend:/app
       - /app/node_modules
+    depends_on:
+      - backend
+    restart: always

@@ -1,20 +1,20 @@
-# Use the official Node.js 22 Alpine image (lightweight)
+# apps/frontend/Dockerfile
 FROM node:22-alpine
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package configuration files
-COPY package*.json ./
-
 # Install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy the entire project source code
+# Build static files
 COPY . .
+RUN npm run build
 
-# Expose the default Vite port
+# Install lightweight server to serve the build
+RUN npm install -g serve
+
 EXPOSE 5173
 
-# Run in development mode with external access from the container
-CMD ["npm", "run", "dev", "--", "--host"]
+# Run production server
+CMD ["serve", "-s", "dist", "-l", "5173"]

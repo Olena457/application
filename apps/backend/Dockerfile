@@ -1,23 +1,19 @@
-# Use the official Node.js 22 Alpine image (very lightweight)
+# apps/backend/Dockerfile
 FROM node:22-alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package configuration files
-COPY package*.json ./
-
 # Install dependencies
+COPY package*.json ./
+COPY prisma ./prisma/ 
 RUN npm install
 
-# Copy the entire project code
+# Build application
 COPY . .
-
-# Build the project (compile TypeScript to JavaScript)
+RUN npx prisma generate
 RUN npm run build
 
-# Expose port 4000 (as configured in main.ts)
 EXPOSE 4000
 
-# Command to start the application
+# Production launch
 CMD ["npm", "run", "start:prod"]
