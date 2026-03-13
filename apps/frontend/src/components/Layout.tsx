@@ -89,7 +89,7 @@ export default function Layout() {
               src={globLogo}
               alt="Logo"
               sx={{
-                height: 24, 
+                height: 24,
                 width: "auto",
               }}
             />
@@ -185,7 +185,7 @@ export default function Layout() {
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Container maxWidth="xl" sx={{ py: 3 }}>
         <Outlet />
       </Container>
     </Box>

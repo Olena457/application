@@ -33,7 +33,7 @@ const registerSchema = yup
       .default(""),
     password: yup
       .string()
-      .min(8, "Password must be at least 8 characters")
+      .min(6, "Password must be at least 6 characters")
       .matches(
         passwordRegex,
         "Password must include uppercase, lowercase, number and special character",

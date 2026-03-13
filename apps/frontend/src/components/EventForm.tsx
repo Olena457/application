@@ -41,6 +41,7 @@ export const eventSchema = yup
       .oneOf(["Public", "Private"])
       .required()
       .default("Public"),
+      
   })
   .required();
 
@@ -113,8 +114,8 @@ export const EventForm = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "auto", 
-          overflowY: "visible", 
+          height: "auto",
+          overflowY: "visible",
           px: 2,
           width: "100%",
         }}
@@ -149,6 +150,9 @@ export const EventForm = ({
               error: !!errors.date,
               helperText: errors.date?.message as string,
             },
+            popper: {
+              disableRestoreFocus: true,
+            } as any,
           }}
         />
         <TextField

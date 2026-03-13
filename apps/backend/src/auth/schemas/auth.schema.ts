@@ -1,35 +1,22 @@
 import * as yup from 'yup';
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const nameRegex = /^[a-zA-Za-яА-ЯіІїЇєЄґҐ' ]+$/;
-
 export const registerSchema = yup.object({
-  email: yup
-    .string()
-    .trim()
-    .lowercase()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
-
   name: yup
     .string()
-    .trim()
-    .max(50, 'Name is too long')
-    .matches(nameRegex, 'Name must contain only letters')
-    .transform((value: string) => (value === '' ? undefined : value))
-    .optional(),
-
+    .matches(/^[a-zA-Za-яА-ЯіІєЄїЇґҐ\s]+$/, 'Name must contain only letters')
+    .required('Name is required'),
+  email: yup.string().email('Invalid email format').required('Email is required'),
   password: yup
     .string()
-    .min(8, 'Password must be at least 8 characters')
+    .min(6, 'Password must be at least 6 characters')
     .matches(
-      passwordRegex,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
       'Password must include uppercase, lowercase, number and special character',
     )
     .required('Password is required'),
 });
 
 export const loginSchema = yup.object({
-  email: yup.string().trim().lowercase().email().required(),
+  email: yup.string().email().required(),
   password: yup.string().required(),
 });

@@ -1,4 +1,7 @@
 
+
+
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -11,11 +14,20 @@ import {
   Divider,
   Skeleton,
   ListItemIcon,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   useGetEventQuery,
   useJoinEventMutation,
   useLeaveEventMutation,
+  useDeleteEventMutation,
 } from "../store/api/eventsApi";
 import type { RootState } from "../store";
 import { EventCard } from "../components/EventCard";
@@ -24,6 +36,10 @@ export default function EventDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const userId = useSelector((state: RootState) => state.auth.user?.id);
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
 
   const {
     data: event,
@@ -33,6 +49,34 @@ export default function EventDetailsPage() {
 
   const [joinEvent, { isLoading: isJoining }] = useJoinEventMutation();
   const [leaveEvent, { isLoading: isLeaving }] = useLeaveEventMutation();
+  const [deleteEvent] = useDeleteEventMutation();
+
+  const handleDeleteClick = () => setOpenDeleteDialog(true);
+  const handleDeleteClose = () => setOpenDeleteDialog(false);
+
+  const handleJoinAction = async () => {
+    if (!token) {
+      setOpenAlert(true);
+      return;
+    }
+    try {
+      await joinEvent(event!.id).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!event) return;
+    try {
+      await deleteEvent(event.id).unwrap();
+      navigate("/events");
+    } catch (err) {
+      console.error("Failed to delete event:", err);
+    } finally {
+      setOpenDeleteDialog(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -70,8 +114,10 @@ export default function EventDetailsPage() {
             viewLabel="Back"
             onView={() => navigate(-1)}
             isParticipant={isParticipant}
+            isLoggedIn={!!token}
             isOrganizer={isOrganizer}
-            onJoin={() => joinEvent(event.id)}
+            onDelete={handleDeleteClick}
+            onJoin={handleJoinAction}
             onLeave={() => leaveEvent(event.id)}
             onEdit={() => navigate(`/events/${event.id}/edit`)}
             isLoading={isJoining || isLeaving}
@@ -90,9 +136,7 @@ export default function EventDetailsPage() {
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
             Participants
           </Typography>
-
           <Divider sx={{ mb: 2 }} />
-
           <List sx={{ flexGrow: 1, overflowY: "auto", maxHeight: "450px" }}>
             {event.participants && event.participants.length > 0 ? (
               event.participants.map((p) => (
@@ -132,6 +176,59 @@ export default function EventDetailsPage() {
           </List>
         </Paper>
       </Box>
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleDeleteClose}
+        disableRestoreFocus
+      >
+        <DialogTitle sx={{ fontWeight: "bold" }}>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this event? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handleDeleteClose} variant="outlined">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            variant="contained"
+            color="error"
+            autoFocus
+          >
+            Yes, Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={4000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setOpenAlert(false)}
+          severity="warning"
+          variant="filled"
+          sx={{ backgroundColor: "#ff6b6b", color: "#000", fontWeight: 600 }}
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => navigate("/login")}
+              sx={{ fontWeight: "bold", textDecoration: "underline" }}
+            >
+              Login Now
+            </Button>
+          }
+        >
+          Please sign in to join events!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

@@ -1,10 +1,9 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
-import { ValidationError } from 'yup';
-import type { AnyObjectSchema } from 'yup';
+import { ValidationError, Schema } from 'yup';
 
 @Injectable()
 export class YupValidationPipe implements PipeTransform {
-  constructor(private readonly schema: AnyObjectSchema) {}
+  constructor(private readonly schema: Schema<unknown>) {}
 
   async transform(value: unknown): Promise<unknown> {
     if (value === null || typeof value !== 'object') {
@@ -12,7 +11,11 @@ export class YupValidationPipe implements PipeTransform {
     }
 
     try {
-      const validatedValue: unknown = await this.schema.validate(value, {
+      const castedValue = this.schema.cast(value, {
+        stripUnknown: true,
+      }) as Record<string, unknown>;
+
+      const validatedValue = await this.schema.validate(castedValue, {
         abortEarly: false,
         stripUnknown: true,
       });
@@ -20,6 +23,7 @@ export class YupValidationPipe implements PipeTransform {
       return validatedValue;
     } catch (err: unknown) {
       if (err instanceof ValidationError) {
+        console.log('YUP VALIDATION ERROR:', err.errors);
         throw new BadRequestException({
           message: 'Validation failed',
           errors: err.inner.map((e: ValidationError) => ({
