@@ -13,11 +13,13 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: [
+      'http://localhost:5173',
+      'https://application-six-ruby.vercel.app/', // render
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
-
   const config = new DocumentBuilder()
     .setTitle('Event Platform API')
     .setDescription('API documentation for the Event Platform application')
