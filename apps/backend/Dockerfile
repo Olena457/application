@@ -10,10 +10,11 @@ RUN npm install
 
 # Build application
 COPY . .
+
 RUN npx prisma generate
 RUN npm run build
 
 EXPOSE 4000
 
 # Production launch
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
