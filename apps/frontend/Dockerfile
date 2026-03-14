@@ -3,6 +3,10 @@ FROM node:22-alpine
 
 WORKDIR /app
 
+# Build-time API URL (for production deploy)
+ARG VITE_API_URL=http://localhost:4000
+ENV VITE_API_URL=$VITE_API_URL
+
 # Install dependencies
 COPY package*.json ./
 RUN npm install

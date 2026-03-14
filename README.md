@@ -71,12 +71,21 @@ JWT_EXPIRES_IN=7d
 
 Copy from `apps/backend/.env.example` and fill in your Neon database credentials.
 
+**Frontend** (`apps/frontend/.env`) — optional for local Docker (default `http://localhost:4000`):
+
+```env
+VITE_API_URL=http://localhost:4000
+```
+
+For production deploy, set `VITE_API_URL` to your backend URL (e.g. `https://api.yourdomain.com`).
+
 ### 2. Database
 
 ```bash
 cd apps/backend
 npm install
-npx prisma       
+npx prisma db push          # sync schema to Neon DB (or: prisma migrate deploy if migrations exist)
+npx prisma db seed          # optional: seed test data
 ```
 
 ### 3. Run Application
@@ -111,7 +120,7 @@ npm run dev
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:4000
-- **Swagger Docs**: http://localhost:4000/api-dock
+- **Swagger Docs**: http://localhost:4000/api-docs
 
 ## Seed Data
 
@@ -136,6 +145,48 @@ After running `npm run seed`:
 | POST | /events/:id/join | Join event (JWT) |
 | POST | /events/:id/leave | Leave event (JWT) |
 | GET | /users/me/events | User's events for calendar (JWT) |
+
+## Deployment
+
+### Branch `prod` (technical spec requirement)
+
+If deployment must use branch `prod`:
+
+1. Create and push the branch:
+   ```bash
+   git checkout -b prod
+   git push -u origin prod
+   ```
+2. For your own repo you don't need a PR — merge directly:
+   ```bash
+   git checkout main
+   git merge prod
+   git push origin main
+   ```
+3. Or use `prod` as the main deployment branch and always push there for releases.
+
+### Docker deploy
+
+1. Build images:
+   ```bash
+   cd application
+   docker-compose build
+   ```
+2. For production, pass `VITE_API_URL` for frontend:
+   ```bash
+   docker-compose build --build-arg VITE_API_URL=https://your-api-domain.com
+   docker-compose up -d
+   ```
+3. Ensure backend `.env` has valid `DATABASE_URL` and `JWT_SECRET` for Neon.
+
+### Prisma schema before first run
+
+Run once before starting backend (creates tables in Neon):
+
+```bash
+cd apps/backend
+npx prisma db push
+```
 
 ## Features
 

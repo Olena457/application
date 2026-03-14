@@ -2,33 +2,27 @@ version: "3.9"
 
 services:
   backend:
-    build: 
-      context: .
-      dockerfile: apps/backend/Dockerfile
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
     container_name: backend_service
     ports:
       - "4000:4000"
     env_file:
       - ./apps/backend/.env
-    volumes:
-      - ./apps/backend:/app
-      - /app/node_modules
-     # - /app/dist
     restart: always
 
   frontend:
-    build: 
-      context: .
-      dockerfile: apps/frontend/Dockerfile
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:4000
     container_name: frontend_service
     ports:
       - "5173:5173"
     env_file:
       - ./apps/frontend/.env
-    volumes:
-      - ./apps/frontend:/app
-      - /app/node_modules
-      #- /app/dist
     depends_on:
       - backend
     restart: always
