@@ -15,7 +15,7 @@ Full-stack event management application with authentication, public event listin
   <img src="./apps/frontend/src/assets/create.jpg" width="25%" height="125px" alt="Create Event"/>
   <img src="./apps/frontend/src/assets/scedule.jpg" width="25%" height="125px" alt="Schedule View"/>
   <img src="./apps/frontend/src/assets/swager.jpg" width="25%" height="125px" alt="Swagger"/>
-  <img src="./apps/frontend/src/assets/error.jpg" width="25%" height="125px" alt="Swagger"/>
+  <img src="./apps/frontend/src/assets/docker.jpg" width="25%" height="125px" alt="Swagger"/>
 </div>
 
 
