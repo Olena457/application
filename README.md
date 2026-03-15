@@ -73,11 +73,13 @@ Copy from `apps/backend/.env.example` and fill in your Neon database credentials
 
 **Frontend** (`apps/frontend/.env`) — optional for local Docker (default `http://localhost:4000`):
 
+
 ```env
 Technical Note: The API URL is resolved in the code using:
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
+```
 For production deploy, set `VITE_API_URL` to your backend URL (e.g. `https://api.yourdomain.com`).
 
 ### 2. Database
