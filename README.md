@@ -191,6 +191,12 @@ cd apps/backend
 npx prisma db push
 ```
 
+## Docker Hub
+You can find the official images for this project here:
+- [Backend Image](https://hub.docker.com/r/olena457/application-backend)
+- [Frontend Image](https://hub.docker.com/r/olena457/application-frontend)
+
+
 ## Features
 
 - **Authentication**: Sign up, login, JWT sessions
