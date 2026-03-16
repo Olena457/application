@@ -36,7 +36,6 @@ model Event {
   organizer    User          @relation("OrganizedBy", fields: [organizerId], references: [id])
   participants Participant[]
   
-  // ДОДАНО: Зв'язок із тегами
   tags         Tag[]         @relation("EventTags")
 
   @@map("events")
