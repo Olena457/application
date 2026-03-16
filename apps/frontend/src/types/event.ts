@@ -20,6 +20,7 @@ export interface Event {
   visibility: string;
   organizerId: string;
   organizer: EventOrganizer;
+  tags?: { id: string; name: string }[];
   participants?: EventParticipant[];
   participantCount?: number;
   _count?: { participants: number };
@@ -32,6 +33,7 @@ export interface CreateEventRequest {
   location: string;
   capacity?: number;
   visibility?: 'Public' | 'Private';
+  tags?: string[];
 }
 
 export interface UpdateEventRequest extends Partial<CreateEventRequest> {}

@@ -29,14 +29,18 @@ export const TagsInput = ({ control, name, label }: TagsInputProps) => {
           value={value || []}
           onChange={(_, newValue) => onChange(newValue)}
           renderTags={(tagValue, getTagProps) =>
-            tagValue.map((option: string, index: number) => (
-              <Chip
-                label={option}
-                {...getTagProps({ index })}
-                variant="outlined"
-                size="small"
-              />
-            ))
+            tagValue.map((option: string, index: number) => {
+              const { key, ...tagProps } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  label={option}
+                  {...tagProps}
+                  variant="outlined"
+                  size="small"
+                />
+              );
+            })
           }
           renderInput={(params) => (
             <TextField

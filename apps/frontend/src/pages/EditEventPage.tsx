@@ -109,6 +109,7 @@ export default function EditEventPage() {
             location: event.location,
             capacity: event.capacity ?? undefined,
             visibility: (event.visibility as "Public" | "Private") || "Public",
+              tags: event.tags?.map((t) => t.name) || [],
           }}
           onSubmit={handleOnSubmit}
           isLoading={isUpdating}
