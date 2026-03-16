@@ -9,7 +9,7 @@ export interface EventData {
   title: string;
   date: Date | string;
   location?: string;
-  tags?: { name: string }[] | string[];
+  tags?: Array<{ name: string } | string>;
   organizer?: { name: string };
   participants?: any[];
 }
