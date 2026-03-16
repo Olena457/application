@@ -8,7 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true, //forbid sending extra fields
+      forbidNonWhitelisted: false, //forbid sending extra fields
       transform: true,
     }),
   );

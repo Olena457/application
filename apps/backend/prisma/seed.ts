@@ -7,6 +7,10 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.participant.deleteMany({});
   await prisma.event.deleteMany({});
+  await prisma.tag.deleteMany({});
+  await prisma.user.deleteMany({
+    where: { email: { in: ['alice@example.com', 'bob@example.com'] } },
+  });
 
   const hashedPassword = await bcrypt.hash('Password123!', 10);
 
@@ -34,7 +38,7 @@ async function main() {
   const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
   const twoWeeks = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
 
-  const eventData: Prisma.EventCreateInput[] = [
+  const eventsToCreate = [
     {
       title: 'Tech Meetup 2026',
       description: 'A gathering for tech enthusiasts to share ideas and network.',
@@ -43,6 +47,12 @@ async function main() {
       capacity: 50,
       visibility: 'Public',
       organizer: { connect: { id: user1.id } },
+      tags: {
+        connectOrCreate: [
+          { where: { name: 'Tech' }, create: { name: 'Tech' } },
+          { where: { name: 'Networking' }, create: { name: 'Networking' } },
+        ],
+      },
     },
     {
       title: 'React Workshop',
@@ -52,6 +62,12 @@ async function main() {
       capacity: 20,
       visibility: 'Public',
       organizer: { connect: { id: user1.id } },
+      tags: {
+        connectOrCreate: [
+          { where: { name: 'Frontend' }, create: { name: 'Frontend' } },
+          { where: { name: 'React' }, create: { name: 'React' } },
+        ],
+      },
     },
     {
       title: 'Node.js Conference',
@@ -61,24 +77,38 @@ async function main() {
       capacity: null,
       visibility: 'Public',
       organizer: { connect: { id: user2.id } },
+      tags: {
+        connectOrCreate: [
+          { where: { name: 'Backend' }, create: { name: 'Backend' } },
+          { where: { name: 'NodeJS' }, create: { name: 'NodeJS' } },
+        ],
+      },
     },
-  ] as unknown as Prisma.EventCreateInput[];
+  ];
 
-  const [event1] = await Promise.all(eventData.map((data) => prisma.event.create({ data })));
+  const createdEvents: { id: string }[] = [];
+  for (const data of eventsToCreate) {
+    const event = await prisma.event.create({
+      data: data as unknown as Prisma.EventCreateInput,
+    });
+    createdEvents.push({ id: event.id });
+  }
 
-  await prisma.participant.create({
-    data: {
-      userId: user2.id,
-      eventId: event1.id,
-    },
-  });
+  if (createdEvents.length > 0) {
+    await prisma.participant.create({
+      data: {
+        userId: user2.id,
+        eventId: createdEvents[0].id,
+      },
+    });
+  }
 
-  console.log('Seed completed: successfully created users');
+  console.log('Seed completed: users, events with tags, and participants created successfully.');
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
+  .catch((e: Error) => {
+    console.error('Error during seeding:', e);
     process.exit(1);
   })
   .finally(async () => {

@@ -59,7 +59,8 @@ export class EventsService {
   }
 
   async create(userId: string, dto: CreateEventDto) {
-    const { tags, ...eventData } = dto;
+    const { tags, date, ...eventData } = dto;
+
     if (tags && tags.length > 5) {
       throw new BadRequestException('Maximum 5 tags allowed');
     }
@@ -67,9 +68,9 @@ export class EventsService {
     return this.prisma.event.create({
       data: {
         ...eventData,
-        date: new Date(dto.date),
+        date: new Date(date),
         organizerId: userId,
-        tags: tags
+        tags: tags?.length
           ? {
               connectOrCreate: tags.map((tag) => ({
                 where: { name: tag },
@@ -95,7 +96,8 @@ export class EventsService {
       throw new ForbiddenException('Only the organizer can edit this event');
     }
 
-    const { tags, ...eventData } = dto;
+    const { tags, date, ...eventData } = dto;
+
     if (tags && tags.length > 5) {
       throw new BadRequestException('Maximum 5 tags allowed');
     }
@@ -104,7 +106,7 @@ export class EventsService {
       where: { id },
       data: {
         ...eventData,
-        ...(dto.date && { date: new Date(dto.date) }),
+        ...(date && { date: new Date(date) }),
         tags: tags
           ? {
               set: [],
@@ -153,7 +155,10 @@ export class EventsService {
 
     if (existing) throw new BadRequestException('Already joined');
 
-    if (event.capacity && event._count.participants >= event.capacity) {
+    const participantCount = (event as typeof event & { _count: { participants: number } })._count
+      .participants;
+
+    if (event.capacity && participantCount >= event.capacity) {
       throw new BadRequestException('Event is full');
     }
 
