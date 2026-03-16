@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { EventData } from '../common/interfaces/request-with-user.interface';
 
 export interface MistralChoice {
@@ -17,6 +17,9 @@ export class AiService {
   private readonly apiKey = process.env.MISTRAL_API_KEY;
 
   async askAssistant(question: string, eventsData: EventData[]): Promise<string> {
+    const fallbackMessage =
+      'Sorry, I didn\u2019t understand that. Please try rephrasing your question.';
+
     const compactEvents = eventsData.map((e) => ({
       title: String(e.title || ''),
       date: String(e.date || ''),
@@ -25,22 +28,23 @@ export class AiService {
         ? e.tags.map((t) => (typeof t === 'object' ? (t as { name: string }).name : String(t)))
         : [],
       organizer: String(e.organizer?.name || 'Unknown'),
+      participants:
+        (e.participants as unknown as { user: { name: string } }[])
+          ?.map((p) => p.user?.name)
+          .filter(Boolean) || [],
       participantsCount: Number(e.participants?.length || 0),
     }));
 
     const prompt = `
+      Context: Today is ${new Date().toISOString()}.
       You are an AI Event Assistant. Below is a list of events in JSON format:
       ${JSON.stringify(compactEvents)}
 
       Answer the user's question based ONLY on the provided events data. 
-      If the answer is not in the data, or the question is unclear, respond EXACTLY with:
-      "Sorry, I did not understand that..."
+      If the question is unclear or unsupported, respond EXACTLY with:
+      "${fallbackMessage}"
 
       User question: "${question}"
-      
-      Requirements:
-      - Be concise and precise.
-      - Support counting, listing, and filtering (by date, tags, or participants).
     `;
 
     try {
@@ -59,15 +63,14 @@ export class AiService {
       if (!response.ok) {
         const errorData = (await response.json()) as unknown;
         console.error('Mistral API Error Detail:', errorData);
-        throw new Error(`Mistral API error: ${response.statusText}`);
+        return fallbackMessage;
       }
 
       const data = (await response.json()) as MistralResponse;
-      return data.choices[0].message.content;
+      return data.choices[0]?.message?.content || fallbackMessage;
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('AI Assistant Error:', errorMessage);
-      throw new InternalServerErrorException('Assistant is currently unavailable');
+      console.error('AI Assistant Error:', error);
+      return fallbackMessage;
     }
   }
 }

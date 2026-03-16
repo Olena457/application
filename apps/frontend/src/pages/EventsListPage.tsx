@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RefreshCw } from "lucide-react";
+import { AiAssistant } from "../components/AiAssistant";
 import {
   Box,
   Typography,
@@ -184,6 +185,11 @@ export default function EventsListPage() {
       </Typography>
 
       <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      {token && (
+        <Box sx={{ my: 3 }}>
+          <AiAssistant />
+        </Box>
+      )}
 
       <EventsList
         events={filteredEvents}

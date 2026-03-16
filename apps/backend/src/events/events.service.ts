@@ -60,6 +60,9 @@ export class EventsService {
 
   async create(userId: string, dto: CreateEventDto) {
     const { tags, ...eventData } = dto;
+    if (tags && tags.length > 5) {
+      throw new BadRequestException('Maximum 5 tags allowed');
+    }
 
     return this.prisma.event.create({
       data: {
@@ -93,6 +96,9 @@ export class EventsService {
     }
 
     const { tags, ...eventData } = dto;
+    if (tags && tags.length > 5) {
+      throw new BadRequestException('Maximum 5 tags allowed');
+    }
 
     return this.prisma.event.update({
       where: { id },
@@ -198,8 +204,12 @@ export class EventsService {
       },
       include: {
         organizer: { select: { name: true } },
-        participants: { select: { userId: true } },
         tags: true,
+        participants: {
+          include: {
+            user: { select: { name: true } },
+          },
+        },
       },
     });
   }

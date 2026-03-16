@@ -1,8 +1,7 @@
-
-
-import { useEffect } from "react"; 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
+import { TagsInput } from "../components/TagsInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
@@ -44,6 +43,11 @@ export const eventSchema = yup
       .oneOf(["Public", "Private"])
       .required()
       .default("Public"),
+    tags: yup
+      .array()
+      .of(yup.string())
+      .max(5, "You can select up to 5 tags")
+      .default([]),
   })
   .required();
 
@@ -71,7 +75,8 @@ export const EventForm = ({
     handleSubmit,
     setValue,
     watch,
-    reset, 
+    reset,
+    control,
     formState: { errors },
   } = useForm<EventFormData>({
     resolver: yupResolver(eventSchema) as any,
@@ -83,6 +88,7 @@ export const EventForm = ({
       capacity: initialValues?.capacity || undefined,
       visibility:
         (initialValues?.visibility as "Public" | "Private") || "Public",
+      tags: initialValues?.tags || [],
     },
   });
 
@@ -90,6 +96,7 @@ export const EventForm = ({
     if (initialValues) {
       reset({
         ...initialValues,
+        tags: initialValues.tags || [],
         title: initialValues.title || "",
         description: initialValues.description || "",
         date: initialValues.date || new Date(),
@@ -167,7 +174,7 @@ export const EventForm = ({
           helperText={errors.location?.message}
           required
         />
-
+        <TagsInput control={control} name="tags" label="Event Tags" />
         <Box sx={{ mt: 1 }}>
           <TextField
             {...register("capacity")}
