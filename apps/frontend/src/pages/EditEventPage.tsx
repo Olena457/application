@@ -1,6 +1,3 @@
-
-
-
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -12,8 +9,14 @@ import {
   useGetEventQuery,
   useUpdateEventMutation,
 } from "../store/api/eventsApi";
-import { Box, Paper, Typography, CircularProgress, Alert, Button } from "@mui/material";
-
+import {
+  Box,
+  Paper,
+  Typography,
+  CircularProgress,
+  Alert,
+  Button,
+} from "@mui/material";
 
 export default function EditEventPage() {
   const { id } = useParams<{ id: string }>();
@@ -42,8 +45,10 @@ export default function EditEventPage() {
         ...data,
         date: data.date.toISOString(),
         capacity: data.capacity ? Number(data.capacity) : undefined,
+        tags: data.tags?.filter((tag): tag is string => Boolean(tag)) || [],
       };
-      await updateEvent({ id, data: payload }).unwrap();
+
+      await updateEvent({ id, data: payload as any }).unwrap();
       navigate(`/events/${id}`);
     } catch (err) {
       console.error("Failed to update event:", err);
@@ -57,7 +62,14 @@ export default function EditEventPage() {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -65,10 +77,18 @@ export default function EditEventPage() {
 
   if (error || !event) {
     return (
-      <Box sx={{ p: 3, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+      <Box
+        sx={{
+          p: 3,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
         <Alert severity="error">
-          {error && "data" in error 
-            ? (error.data as any).message 
+          {error && "data" in error
+            ? (error.data as any).message
             : "Event not found or failed to load data."}
         </Alert>
         <Button variant="contained" onClick={() => navigate("/events")}>
@@ -109,7 +129,7 @@ export default function EditEventPage() {
             location: event.location,
             capacity: event.capacity ?? undefined,
             visibility: (event.visibility as "Public" | "Private") || "Public",
-              tags: event.tags?.map((t) => t.name) || [],
+            tags: event.tags?.map((t: any) => t.name).filter(Boolean) || [],
           }}
           onSubmit={handleOnSubmit}
           isLoading={isUpdating}

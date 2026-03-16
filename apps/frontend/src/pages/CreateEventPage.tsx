@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { Paper, Typography } from "@mui/material";
 import { useCreateEventMutation } from "../store/api/eventsApi";
@@ -16,9 +15,10 @@ export default function CreateEventPage() {
         date: data.date.toISOString(),
         description: data.description || undefined,
         capacity: data.capacity ? Number(data.capacity) : undefined,
+        tags: data.tags?.filter((tag): tag is string => Boolean(tag)) || [],
       };
 
-      const event = await createEvent(payload).unwrap();
+      const event = await createEvent(payload as any).unwrap();
       navigate(`/events/${event.id}`);
     } catch (err) {
       console.error("Submission failed:", err);
