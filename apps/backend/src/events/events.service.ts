@@ -19,6 +19,7 @@ export class EventsService {
         organizer: {
           select: { id: true, name: true, email: true },
         },
+        tags: true,
         participants: {
           select: { userId: true },
         },
@@ -35,6 +36,7 @@ export class EventsService {
         organizer: {
           select: { id: true, name: true, email: true },
         },
+        tags: true,
         participants: {
           include: {
             user: { select: { id: true, name: true, email: true } },
@@ -57,16 +59,27 @@ export class EventsService {
   }
 
   async create(userId: string, dto: CreateEventDto) {
+    const { tags, ...eventData } = dto;
+
     return this.prisma.event.create({
       data: {
-        ...dto,
+        ...eventData,
         date: new Date(dto.date),
         organizerId: userId,
+        tags: tags
+          ? {
+              connectOrCreate: tags.map((tag) => ({
+                where: { name: tag },
+                create: { name: tag },
+              })),
+            }
+          : undefined,
       },
       include: {
         organizer: {
           select: { id: true, name: true, email: true },
         },
+        tags: true,
       },
     });
   }
@@ -79,16 +92,28 @@ export class EventsService {
       throw new ForbiddenException('Only the organizer can edit this event');
     }
 
+    const { tags, ...eventData } = dto;
+
     return this.prisma.event.update({
       where: { id },
       data: {
-        ...dto,
+        ...eventData,
         ...(dto.date && { date: new Date(dto.date) }),
+        tags: tags
+          ? {
+              set: [],
+              connectOrCreate: tags.map((tag) => ({
+                where: { name: tag },
+                create: { name: tag },
+              })),
+            }
+          : undefined,
       },
       include: {
         organizer: {
           select: { id: true, name: true, email: true },
         },
+        tags: true,
       },
     });
   }
@@ -155,9 +180,27 @@ export class EventsService {
       },
       include: {
         organizer: { select: { id: true, name: true } },
+        tags: true,
         _count: { select: { participants: true } },
       },
       orderBy: { date: 'asc' },
+    });
+  }
+
+  async findAllForUser(userId: string) {
+    return this.prisma.event.findMany({
+      where: {
+        OR: [
+          { organizerId: userId },
+          { participants: { some: { userId: userId } } },
+          { visibility: 'Public' },
+        ],
+      },
+      include: {
+        organizer: { select: { name: true } },
+        participants: { select: { userId: true } },
+        tags: true,
+      },
     });
   }
 }

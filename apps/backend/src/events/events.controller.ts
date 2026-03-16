@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Req,
+  UseGuards,
+  BadRequestException,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -6,11 +17,34 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../auth/decorators/public.decorator';
-
+import { AiService } from './ai.service';
+import type { RequestWithUser, EventData } from '../common/interfaces/request-with-user.interface';
 @ApiTags('events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(
+    private readonly eventsService: EventsService,
+    private readonly aiService: AiService,
+  ) {}
+
+  @Post('assistant')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Chat with AI Assistant about events' })
+  async askAssistant(
+    @Body('question') question: string,
+    @Req() req: RequestWithUser,
+  ): Promise<{ answer: string }> {
+    if (!question) {
+      throw new BadRequestException('Question is required for AI Assistant');
+    }
+
+    const userId = req.user.id;
+    const events = (await this.eventsService.findAllForUser(userId)) as EventData[];
+    const answer = await this.aiService.askAssistant(question, events);
+
+    return { answer };
+  }
 
   @Get()
   @Public()

@@ -1,7 +1,7 @@
-
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
@@ -13,40 +13,51 @@ model User {
   email           String        @unique
   password        String
   name            String?
-  organizedEvents Event[]       @relation("OrganizedBy")
-  participations  Participant[]
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
+  organizedEvents Event[]       @relation("OrganizedBy")
+  participations  Participant[]
 
   @@map("users")
 }
 
 model Event {
-  id          String        @id @default(uuid())
-  title       String
-  description String?
-  date        DateTime
-  location    String
-  capacity    Int?          // null = unlimited
-  visibility  String        @default("Public") // "Public" | "Private"
-  category    String?       // optional
-  organizer   User          @relation("OrganizedBy", fields: [organizerId], references: [id])
-  organizerId String        @map("organizer_id")
+  id           String        @id @default(uuid())
+  title        String
+  description  String?
+  date         DateTime
+  location     String
+  category     String?
+  organizerId  String        @map("organizer_id")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  capacity     Int?
+  visibility   String        @default("Public")
+  organizer    User          @relation("OrganizedBy", fields: [organizerId], references: [id])
   participants Participant[]
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  
+  // ДОДАНО: Зв'язок із тегами
+  tags         Tag[]         @relation("EventTags")
 
   @@map("events")
 }
 
 model Participant {
   id       String   @id @default(uuid())
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String   @map("user_id")
-  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId  String   @map("event_id")
   joinedAt DateTime @default(now()) @map("joined_at")
+  event    Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, eventId])
   @@map("participants")
+}
+
+model Tag {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  events Event[] @relation("EventTags")
+
+  @@map("tags")
 }

@@ -1,5 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min, IsIn, IsDateString } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsInt,
+  Min,
+  IsIn,
+  IsDateString,
+  IsArray,
+  ArrayMaxSize,
+} from 'class-validator';
 
 export class CreateEventDto {
   @ApiProperty({ example: 'Tech Meetup 2026' })
@@ -32,4 +42,15 @@ export class CreateEventDto {
   @IsIn(['Public', 'Private'])
   @IsOptional()
   visibility?: 'Public' | 'Private';
+  // New field for tags
+  @ApiPropertyOptional({
+    example: ['Tech', 'Networking'],
+    description: 'List of tag names (max 5)',
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMaxSize(5, { message: 'You can add up to 5 tags only' })
+  tags?: string[];
 }
