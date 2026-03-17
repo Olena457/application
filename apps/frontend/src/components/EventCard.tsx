@@ -68,7 +68,8 @@ export const EventCard = ({
     >
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="h6" gutterBottom fontWeight="bold">
-          {event.title}
+          {/* {event.title} */}
+          {event.title.replace(/\s#\d+$/, "")}
         </Typography>
 
         <ExpandDescription text={event.description ?? ""} />
