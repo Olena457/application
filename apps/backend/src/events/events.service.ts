@@ -12,36 +12,31 @@ import { UpdateEventDto } from './dto/update-event.dto';
 export class EventsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // async findPublic() {
-  //   return this.prisma.event.findMany({
-  //     where: { visibility: 'Public' },
-  //     include: {
-  //       organizer: {
-  //         select: { id: true, name: true, email: true },
-  //       },
-  //       tags: true,
-  //       participants: {
-  //         select: { userId: true },
-  //       },
-  //       _count: { select: { participants: true } },
-  //     },
-  //     orderBy: { date: 'asc' },
-  //   });
-  // }
-  async findPublic() {
-    return this.prisma.event.findMany({
-      where: { visibility: 'Public' },
-      include: {
-        organizer: {
-          select: { id: true, name: true, email: true },
+  async findPublic(page: number = 1) {
+    const limit = 6;
+    const skip = (page - 1) * limit;
+
+    const [events, total] = await Promise.all([
+      this.prisma.event.findMany({
+        where: { visibility: 'Public' },
+        take: limit,
+        skip: skip,
+        include: {
+          organizer: { select: { id: true, name: true, email: true } },
+          tags: true,
+          _count: { select: { participants: true } },
         },
-        tags: true,
-        _count: {
-          select: { participants: true },
-        },
-      },
-      orderBy: { date: 'asc' },
-    });
+        orderBy: { date: 'asc' },
+      }),
+      this.prisma.event.count({ where: { visibility: 'Public' } }),
+    ]);
+
+    return {
+      events,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async findById(id: string, userId?: string) {

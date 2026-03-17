@@ -24,10 +24,12 @@ import { EventsList } from "../components/EventsList";
 import { SearchBar } from "../components/SearchBar";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { AuthAlert } from "../components/AuthAlert";
+import { PaginationControls } from "../components/PaginationControls";
 
 export default function EventsListPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
 
   const [alertConfig, setAlertConfig] = useState<{
     open: boolean;
@@ -47,12 +49,7 @@ export default function EventsListPage() {
   const token = useSelector((state: RootState) => state.auth.token);
   const userId = useSelector((state: RootState) => state.auth.user?.id);
 
-  const {
-    data: events,
-    isLoading,
-    error,
-    refetch,
-  } = useGetPublicEventsQuery(undefined, {
+  const { data, isLoading, error, refetch } = useGetPublicEventsQuery(page, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -60,28 +57,28 @@ export default function EventsListPage() {
   const [leaveEvent, { isLoading: isLeaving }] = useLeaveEventMutation();
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
 
+  const events = data?.events || [];
+  const lastPage = data?.lastPage || 1;
+
   const filteredEvents = useMemo(() => {
     if (!events) return [];
     const q = searchQuery.toLowerCase();
 
-    return (
-      events
-        .filter(
-          (e) =>
-            e.title.toLowerCase().includes(q) ||
-            e.location.toLowerCase().includes(q),
-        )
-        .map((event) => ({
-          ...event,
-          isParticipant:
-            event.participants?.some((p: any) => {
-              const pId = p.id || p.userId || p.user?.id;
-              return String(pId) === String(userId);
-            }) ?? false,
-          isOrganizer: String(event.organizerId) === String(userId),
-        }))
-    );
-        
+    return events
+      .filter(
+        (e) =>
+          e.title.toLowerCase().includes(q) ||
+          e.location.toLowerCase().includes(q),
+      )
+      .map((event) => ({
+        ...event,
+        isParticipant:
+          event.participants?.some((p: any) => {
+            const pId = p.id || p.userId || p.user?.id;
+            return String(pId) === String(userId);
+          }) ?? false,
+        isOrganizer: String(event.organizerId) === String(userId),
+      }));
   }, [events, searchQuery, userId]);
 
   const handleJoinAction = async (eventId: string) => {
@@ -142,7 +139,7 @@ export default function EventsListPage() {
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mt: 4 }}>
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3, 4, 5, 6].map((i) => (
           <Skeleton
             key={i}
             variant="rectangular"
@@ -184,7 +181,14 @@ export default function EventsListPage() {
         Discover Events
       </Typography>
 
-      <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      <SearchBar
+        value={searchQuery}
+        onChange={(val) => {
+          setSearchQuery(val);
+          setPage(1);
+        }}
+      />
+
       {token && (
         <Box sx={{ my: 3 }}>
           <AiAssistant />
@@ -203,6 +207,15 @@ export default function EventsListPage() {
         onView={(id) => navigate(`/events/${id}`)}
         onDelete={handleDeleteClick}
         searchQuery={searchQuery}
+      />
+
+      <PaginationControls
+        page={page}
+        count={lastPage}
+        onChange={(newPage) => {
+          setPage(newPage);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       />
 
       <ConfirmDialog

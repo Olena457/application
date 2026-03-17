@@ -35,5 +35,11 @@ export interface CreateEventRequest {
   visibility?: 'Public' | 'Private';
   tags?: string[];
 }
+export interface PaginatedEvents {
+  events: Event[];
+  total: number;
+  page: number;
+  lastPage: number;
+}
 
 export interface UpdateEventRequest extends Partial<CreateEventRequest> {}
