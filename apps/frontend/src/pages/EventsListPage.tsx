@@ -136,62 +136,106 @@ export default function EventsListPage() {
 
   if (error) return <EventsError onRetry={() => refetch()} />;
 
- return (
-   <Box sx={{ py: 2 }}>
-     <EventsHeader
-       searchQuery={searchQuery}
-       onSearchChange={(val) => {
-         setSearchQuery(val);
-         setPage(1);
-       }}
-     />
+  return (
+    // <Box
+    //   sx={{
+    //     display: "flex",
+    //     gap: 2,
+    //     my: 3,
+    //     flexDirection: { sx: "column", md: "row" },
+    //     alignItems: { md: "flex-start" },
+    //   }}
+    // >
+    //   <Box sx={{ py: 2, flex: 1 }}>
+    //     <EventsHeader
+    //       searchQuery={searchQuery}
+    //       onSearchChange={(val) => {
+    //         setSearchQuery(val);
+    //         setPage(1);
+    //       }}
+    //     />
 
-     {token && (
-       <Box sx={{ my: 3 }}>
-         <AiAssistant />
-       </Box>
-     )}
+    //     {token && (
+    //       <Box sx={{
+    //         my: 3, width: { xs: "100%", md: "400px" },
+    //       mt: { xs: 0, md: '40px' }
+    //       }}>
+    //         <AiAssistant />
+    //       </Box>
+    //     )}
+    //   </Box>
+    <Box sx={{ py: 2, px: { xs: 1, lg: 4 } }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          px: { xs: 1, lg: 10 },
+          gap: 2,
+          mb: 4,
+          alignItems: { md: "space-around" },
+        }}
+      >
+        <Box sx={{ flex: 1 }}>
+          <EventsHeader
+            searchQuery={searchQuery}
+            onSearchChange={(val) => {
+              setSearchQuery(val);
+              setPage(1);
+            }}
+          />
+        </Box>
 
-     <EventsList
-       events={filteredEvents}
-       userId={userId}
-       token={token}
-       isJoining={isJoining}
-       isLeaving={isLeaving}
-       onJoin={handleJoinAction}
-       onLeave={handleLeaveAction}
-       onEdit={(id) => navigate(`/events/${id}/edit`)}
-       onView={(id) => navigate(`/events/${id}`)}
-       onDelete={handleDeleteClick}
-       searchQuery={searchQuery}
-     />
+        {token && (
+          <Box
+            sx={{
+              width: { xs: "100%", md: "450px", lg: "550px" },
+            }}
+          >
+            <AiAssistant />
+          </Box>
+        )}
+      </Box>
 
-     <PaginationControls
-       page={page}
-       count={lastPage}
-       onChange={(newPage) => {
-         setPage(newPage);
-         window.scrollTo({ top: 0, behavior: "smooth" });
-       }}
-     />
+      <EventsList
+        events={filteredEvents}
+        userId={userId}
+        token={token}
+        isJoining={isJoining}
+        isLeaving={isLeaving}
+        onJoin={handleJoinAction}
+        onLeave={handleLeaveAction}
+        onEdit={(id) => navigate(`/events/${id}/edit`)}
+        onView={(id) => navigate(`/events/${id}`)}
+        onDelete={handleDeleteClick}
+        searchQuery={searchQuery}
+      />
 
-     <ConfirmDialog
-       open={openDeleteDialog}
-       onClose={() => setOpenDeleteDialog(false)}
-       onConfirm={handleConfirmDelete}
-       isLoading={isDeleting}
-       title="Delete Event"
-       description="Are you sure you want to delete this event?"
-       confirmLabel="Yes, Delete"
-     />
+      <PaginationControls
+        page={page}
+        count={lastPage}
+        onChange={(newPage) => {
+          setPage(newPage);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
 
-     <AuthAlert
-       open={alertConfig.open}
-       message={alertConfig.message}
-       severity={alertConfig.severity}
-       showLoginButton={alertConfig.showLogin}
-       onClose={() => setAlertConfig((prev) => ({ ...prev, open: false }))}
-     />
-   </Box>
- );
+      <ConfirmDialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onConfirm={handleConfirmDelete}
+        isLoading={isDeleting}
+        title="Delete Event"
+        description="Are you sure you want to delete this event?"
+        confirmLabel="Yes, Delete"
+      />
+
+      <AuthAlert
+        open={alertConfig.open}
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        showLoginButton={alertConfig.showLogin}
+        onClose={() => setAlertConfig((prev) => ({ ...prev, open: false }))}
+      />
+    </Box>
+  );
 }
