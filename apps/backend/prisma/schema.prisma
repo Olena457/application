@@ -35,12 +35,11 @@ model Event {
   visibility   String        @default("Public")
   organizer    User          @relation("OrganizedBy", fields: [organizerId], references: [id])
   participants Participant[]
-  
   tags         Tag[]         @relation("EventTags")
 
+  @@index([date])          
   @@map("events")
 }
-
 model Participant {
   id       String   @id @default(uuid())
   userId   String   @map("user_id")

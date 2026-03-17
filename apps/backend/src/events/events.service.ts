@@ -12,6 +12,22 @@ import { UpdateEventDto } from './dto/update-event.dto';
 export class EventsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  // async findPublic() {
+  //   return this.prisma.event.findMany({
+  //     where: { visibility: 'Public' },
+  //     include: {
+  //       organizer: {
+  //         select: { id: true, name: true, email: true },
+  //       },
+  //       tags: true,
+  //       participants: {
+  //         select: { userId: true },
+  //       },
+  //       _count: { select: { participants: true } },
+  //     },
+  //     orderBy: { date: 'asc' },
+  //   });
+  // }
   async findPublic() {
     return this.prisma.event.findMany({
       where: { visibility: 'Public' },
@@ -20,10 +36,9 @@ export class EventsService {
           select: { id: true, name: true, email: true },
         },
         tags: true,
-        participants: {
-          select: { userId: true },
+        _count: {
+          select: { participants: true },
         },
-        _count: { select: { participants: true } },
       },
       orderBy: { date: 'asc' },
     });
