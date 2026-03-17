@@ -24,6 +24,11 @@ export class EventsService {
         include: {
           organizer: { select: { id: true, name: true, email: true } },
           tags: true,
+          participants: {
+            select: {
+              userId: true,
+            },
+          },
           _count: { select: { participants: true } },
         },
         orderBy: { date: 'asc' },
