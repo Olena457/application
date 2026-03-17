@@ -1,22 +1,18 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { EventForm } from "../components/EventForm";
-import type { EventFormData } from "../components/EventForm";
-import type { RootState } from "../store";
+import { Box, Paper, Typography, Button, Alert } from "@mui/material";
 
 import {
   useGetEventQuery,
   useUpdateEventMutation,
 } from "../store/api/eventsApi";
-import {
-  Box,
-  Paper,
-  Typography,
-  CircularProgress,
-  Alert,
-  Button,
-} from "@mui/material";
+import type { RootState } from "../store";
+import { EventForm, type EventFormData } from "../components/EventForm";
+
+import { formatEventPayload } from "../utils/eventHelpers";
+import { getApiErrorMessage } from "../utils/errorHelpers";
+import { EventDetailsSkeleton } from "../components/EventDetailsSkeleton";
 
 export default function EditEventPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +24,6 @@ export default function EditEventPage() {
     isLoading,
     error,
   } = useGetEventQuery(id!, { skip: !id });
-
   const [updateEvent, { isLoading: isUpdating, error: updateError }] =
     useUpdateEventMutation();
 
@@ -41,13 +36,7 @@ export default function EditEventPage() {
   const handleOnSubmit = async (data: EventFormData) => {
     if (!id) return;
     try {
-      const payload = {
-        ...data,
-        date: data.date.toISOString(),
-        capacity: data.capacity ? Number(data.capacity) : undefined,
-        tags: data.tags?.filter((tag): tag is string => Boolean(tag)) || [],
-      };
-
+      const payload = formatEventPayload(data);
       await updateEvent({ id, data: payload as any }).unwrap();
       navigate(`/events/${id}`);
     } catch (err) {
@@ -55,25 +44,7 @@ export default function EditEventPage() {
     }
   };
 
-  const apiErrorMessage =
-    updateError && "data" in updateError
-      ? (updateError.data as any).message?.toString()
-      : null;
-
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  if (isLoading) return <EventDetailsSkeleton />;
 
   if (error || !event) {
     return (
@@ -87,9 +58,8 @@ export default function EditEventPage() {
         }}
       >
         <Alert severity="error">
-          {error && "data" in error
-            ? (error.data as any).message
-            : "Event not found or failed to load data."}
+          {getApiErrorMessage(error) ||
+            "Event not found or failed to load data."}
         </Alert>
         <Button variant="contained" onClick={() => navigate("/events")}>
           Back to Events
@@ -104,20 +74,11 @@ export default function EditEventPage() {
         p: 3,
         display: "flex",
         justifyContent: "center",
-        backgroundColor: "#f5f5f5",
-        minHeight: "100vh",
+        minHeight: "80vh",
       }}
     >
-      <Paper
-        sx={{
-          p: 4,
-          width: "100%",
-          maxWidth: 600,
-          height: "auto",
-          borderRadius: "16px",
-        }}
-      >
-        <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+      <Paper sx={{ p: 4, width: "100%", maxWidth: 600, borderRadius: "16px" }}>
+        <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
           Edit Event
         </Typography>
 
@@ -129,12 +90,13 @@ export default function EditEventPage() {
             location: event.location,
             capacity: event.capacity ?? undefined,
             visibility: (event.visibility as "Public" | "Private") || "Public",
-            tags: event.tags?.map((t: any) => t.name).filter(Boolean) || [],
+            tags:
+              event.tags?.map((t: any) => t.name || t).filter(Boolean) || [],
           }}
           onSubmit={handleOnSubmit}
           isLoading={isUpdating}
           onCancel={() => navigate(-1)}
-          apiError={apiErrorMessage}
+          apiError={getApiErrorMessage(updateError)}
           submitLabel="Save Changes"
         />
       </Paper>

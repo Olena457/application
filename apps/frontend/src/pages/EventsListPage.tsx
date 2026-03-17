@@ -2,15 +2,10 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RefreshCw } from "lucide-react";
 import { AiAssistant } from "../components/AiAssistant";
+import { EventsSkeleton } from "../components/EventsSkeleton";
 import {
   Box,
-  Typography,
-  Skeleton,
-  Alert,
-  AlertTitle,
-  Button,
 } from "@mui/material";
 
 import {
@@ -21,10 +16,11 @@ import {
 } from "../store/api/eventsApi";
 import type { RootState } from "../store";
 import { EventsList } from "../components/EventsList";
-import { SearchBar } from "../components/SearchBar";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { AuthAlert } from "../components/AuthAlert";
 import { PaginationControls } from "../components/PaginationControls";
+import { EventsError } from "../components/EventsError";
+import { EventsHeader } from "../components/EventsHeader";
 
 export default function EventsListPage() {
   const navigate = useNavigate();
@@ -136,105 +132,66 @@ export default function EventsListPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mt: 4 }}>
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <Skeleton
-            key={i}
-            variant="rectangular"
-            height={250}
-            sx={{ flex: "1 1 300px", borderRadius: 2 }}
-          />
-        ))}
-      </Box>
-    );
-  }
+ if (isLoading) return <EventsSkeleton count={8} />;
 
-  if (error) {
-    return (
-      <Box sx={{ mt: 4, maxWidth: 600, mx: "auto" }}>
-        <Alert
-          severity="error"
-          variant="outlined"
-          action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => refetch()}
-              startIcon={<RefreshCw size={16} />}
-            >
-              Retry
-            </Button>
-          }
-        >
-          <AlertTitle>Error Loading Events</AlertTitle>
-          Something went wrong while fetching the events list.
-        </Alert>
-      </Box>
-    );
-  }
+  if (error) return <EventsError onRetry={() => refetch()} />;
 
-  return (
-    <Box sx={{ py: 2 }}>
-      <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
-        Discover Events
-      </Typography>
+ return (
+   <Box sx={{ py: 2 }}>
+     <EventsHeader
+       searchQuery={searchQuery}
+       onSearchChange={(val) => {
+         setSearchQuery(val);
+         setPage(1);
+       }}
+     />
 
-      <SearchBar
-        value={searchQuery}
-        onChange={(val) => {
-          setSearchQuery(val);
-          setPage(1);
-        }}
-      />
+     {token && (
+       <Box sx={{ my: 3 }}>
+         <AiAssistant />
+       </Box>
+     )}
 
-      {token && (
-        <Box sx={{ my: 3 }}>
-          <AiAssistant />
-        </Box>
-      )}
+     <EventsList
+       events={filteredEvents}
+       userId={userId}
+       token={token}
+       isJoining={isJoining}
+       isLeaving={isLeaving}
+       onJoin={handleJoinAction}
+       onLeave={handleLeaveAction}
+       onEdit={(id) => navigate(`/events/${id}/edit`)}
+       onView={(id) => navigate(`/events/${id}`)}
+       onDelete={handleDeleteClick}
+       searchQuery={searchQuery}
+     />
 
-      <EventsList
-        events={filteredEvents}
-        userId={userId}
-        token={token}
-        isJoining={isJoining}
-        isLeaving={isLeaving}
-        onJoin={handleJoinAction}
-        onLeave={handleLeaveAction}
-        onEdit={(id) => navigate(`/events/${id}/edit`)}
-        onView={(id) => navigate(`/events/${id}`)}
-        onDelete={handleDeleteClick}
-        searchQuery={searchQuery}
-      />
+     <PaginationControls
+       page={page}
+       count={lastPage}
+       onChange={(newPage) => {
+         setPage(newPage);
+         window.scrollTo({ top: 0, behavior: "smooth" });
+       }}
+     />
 
-      <PaginationControls
-        page={page}
-        count={lastPage}
-        onChange={(newPage) => {
-          setPage(newPage);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-      />
+     <ConfirmDialog
+       open={openDeleteDialog}
+       onClose={() => setOpenDeleteDialog(false)}
+       onConfirm={handleConfirmDelete}
+       isLoading={isDeleting}
+       title="Delete Event"
+       description="Are you sure you want to delete this event?"
+       confirmLabel="Yes, Delete"
+     />
 
-      <ConfirmDialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-        onConfirm={handleConfirmDelete}
-        isLoading={isDeleting}
-        title="Delete Event"
-        description="Are you sure you want to delete this event?"
-        confirmLabel="Yes, Delete"
-      />
-
-      <AuthAlert
-        open={alertConfig.open}
-        message={alertConfig.message}
-        severity={alertConfig.severity}
-        showLoginButton={alertConfig.showLogin}
-        onClose={() => setAlertConfig((prev) => ({ ...prev, open: false }))}
-      />
-    </Box>
-  );
+     <AuthAlert
+       open={alertConfig.open}
+       message={alertConfig.message}
+       severity={alertConfig.severity}
+       showLoginButton={alertConfig.showLogin}
+       onClose={() => setAlertConfig((prev) => ({ ...prev, open: false }))}
+     />
+   </Box>
+ );
 }

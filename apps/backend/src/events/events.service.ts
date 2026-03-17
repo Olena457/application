@@ -13,7 +13,7 @@ export class EventsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findPublic(page: number = 1) {
-    const limit = 6;
+    const limit = 8;
     const skip = (page - 1) * limit;
 
     const [events, total] = await Promise.all([
