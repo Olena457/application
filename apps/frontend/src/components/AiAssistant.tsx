@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Sparkles, Send } from "lucide-react";
 import { useAskAiAssistantMutation } from "../store/api/eventsApi";
+import ReactMarkdown from "react-markdown";
 
 export const AiAssistant = () => {
   const [question, setQuestion] = useState("");
@@ -99,6 +100,10 @@ const handleSubmit = async (e: React.SyntheticEvent) => {
                 borderRadius: 1,
                 borderLeft: "4px solid",
                 borderColor: "primary.main",
+                "& p": { m: 0, mb: 1 },
+                "& ul, & ol": { m: 0, pl: 2, mb: 1 },
+                "& li": { mb: 0.5 },
+                "& strong": { fontWeight: 700, color: "text.primary" },
               }}
             >
               <Typography
@@ -109,7 +114,16 @@ const handleSubmit = async (e: React.SyntheticEvent) => {
               >
                 Assistant:
               </Typography>
-              <Typography variant="body2">{data.answer}</Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  whiteSpace: "pre-wrap",
+                  lineHeight: 1.6,
+                  color: "text.primary",
+                }}
+              >
+                <ReactMarkdown skipHtml>{data.answer}</ReactMarkdown>
+              </Typography>
             </Box>
           )}
         </Collapse>

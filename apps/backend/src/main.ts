@@ -13,10 +13,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'https://application-six-ruby.vercel.app', // render
-    ],
+    origin: ['http://localhost:5173', 'https://application-six-ruby.vercel.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
