@@ -1,8 +1,10 @@
+
 import * as yup from "yup";
 
- const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+
 export const nameRegex = /^[a-zA-Za-яА-ЯіІїЇєЄґҐ' ]+$/;
 
 export const registerSchema = yup
@@ -19,12 +21,12 @@ export const registerSchema = yup
       .default(""),
     password: yup
       .string()
-      .min(10, "Password must be at least 10 characters")
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters")
       .matches(
         passwordRegex,
         "Password must include uppercase, lowercase, number and special character",
-      )
-      .required("Password is required"),
+      ),
   })
   .required();
 

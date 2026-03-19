@@ -1,7 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { dateFnsLocalizer, Calendar, Views } from "react-big-calendar";
 import type { View } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay, addDays, subDays } from "date-fns";
@@ -11,6 +11,7 @@ import { useGetMyEventsQuery } from "../store/api/eventsApi";
 import { WeeklyCalendarView } from "../components/WeeklyCalendarView";
 import { CalendarHeader } from "../components/CalendarHeader";
 import { eventPropGetter } from "../helpers/tagColors";
+import { Loader } from "../components/Loader";
 
 const locales = { "en-US": enUS };
 const localizer = dateFnsLocalizer({
@@ -55,7 +56,8 @@ export default function MyEventsPage() {
     }
   };
 
-  if (isLoading) return <Typography sx={{ p: 4 }}>Loading...</Typography>;
+  // if (isLoading) return <Typography sx={{ p: 4 }}>Loading...</Typography>;
+  if (isLoading) return <Loader />;
 
   return (
     <Box

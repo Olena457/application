@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
@@ -77,6 +76,7 @@ export const LoginForm = ({
         autoFocus
         disabled={isLoading}
       />
+
       <TextField
         {...register("password")}
         label="Password"
@@ -87,18 +87,20 @@ export const LoginForm = ({
         error={!!errors.password}
         helperText={errors.password?.message}
         disabled={isLoading}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-                type="button"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </IconButton>
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                  type="button"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
         }}
       />
 

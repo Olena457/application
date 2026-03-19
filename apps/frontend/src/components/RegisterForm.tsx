@@ -1,12 +1,8 @@
-
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  registerSchema 
-} from "../utils/auth.validation";
+import { registerSchema } from "../utils/auth.validation";
 
 import type { RegisterFormData } from "../utils/auth.validation";
 
@@ -73,7 +69,7 @@ export const RegisterForm = ({
 
       <TextField
         {...register("name")}
-        label="Name (optionally: surname)"
+        label="First name and surname"
         placeholder="Your name"
         fullWidth
         margin="normal"
