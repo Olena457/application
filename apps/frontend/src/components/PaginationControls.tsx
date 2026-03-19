@@ -1,4 +1,4 @@
-import { Pagination, Box } from "@mui/material";
+import { Pagination, Box , } from "@mui/material";
 
 interface Props {
   page: number;
@@ -18,6 +18,13 @@ export const PaginationControls = ({ page, count, onChange }: Props) => {
         color="primary"
         variant="outlined"
         shape="rounded"
+        sx={{
+          "& .MuiPaginationItem-root": {
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.25)",
+            borderColor: "#1eb4ea",
+            borderRadius: "4px",
+          },
+        }}
       />
     </Box>
   );

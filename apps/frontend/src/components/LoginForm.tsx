@@ -112,8 +112,31 @@ export const LoginForm = ({
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2, py: 1.5, fontWeight: 600 }}
         disabled={isLoading}
+        sx={{
+          flex: 1,
+          textTransform: "none",
+          mt: 3,
+          mb: 2,
+          py: 1.5,
+          fontWeight: 600,
+          borderRadius: { xs: "8px", md: "10px" },
+          backgroundImage:
+            "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+          backgroundColor: "transparent",
+          color: "white",
+          border: "none",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          transition: "all 0.3s ease",
+
+          "&:hover": {
+            backgroundImage:
+              "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+          },
+
+          "&:focus": { outline: "none" },
+        }}
       >
         {isLoading ? "Signing in..." : "Sign In"}
       </Button>

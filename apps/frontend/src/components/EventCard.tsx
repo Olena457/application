@@ -5,12 +5,14 @@ import {
   Typography,
   Box,
   CardActions,
-  Button,
+  Chip,
+  Stack,
 } from "@mui/material";
 import { Calendar, Clock4, MapPin, Users } from "lucide-react";
 import { format } from "date-fns";
 import type { Event } from "../types/event";
 import { ExpandDescription } from "./ExpandDescription";
+import { GradientButton } from "./GradientButton"; 
 
 interface EventCardProps {
   event: Event;
@@ -25,6 +27,12 @@ interface EventCardProps {
   viewLabel?: string;
   isLoggedIn?: boolean;
 }
+
+const BLUE: [string, string] = ["#1e88e5", "#0d47a1"];
+const GRAY: [string, string] = ["#c0b8b8", "#918c8c"];
+const GREEN: [string, string] = ["#ffb300", "#f57c00"];
+const CORAL: [string, string] = ["#f57c7c", "#b93838"];
+
 
 export const EventCard = ({
   event,
@@ -57,144 +65,132 @@ export const EventCard = ({
 
   return (
     <Card
+      elevation={3}
       sx={{
         height: "100%",
         display: "flex",
         flexDirection: "column",
         borderRadius: 2,
-        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-        overflow: "hidden",
+        transition: "transform 0.3s ease",
+        "&:hover": { transform: "translateY(-5px)" },
       }}
     >
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant="h6" gutterBottom fontWeight="bold">
-          {/* {event.title} */}
-          {event.title.replace(/\s#\d+$/, "")}
+      <CardContent sx={{ flexGrow: 1, px: 2, py: 2 }}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          fontWeight="bold"
+          sx={{
+            display: "inline-flex",
+            width: "fit-content",
+            color: "#1e88e5",
+            mb: 1,
+          }}
+        >
+          {event.title}
         </Typography>
 
         <ExpandDescription text={event.description ?? ""} />
 
         <Box sx={iconRowStyle}>
-          <Calendar size={16} />
+          <Calendar size={16} color="#828484" />
           <Typography variant="body2">
             {format(new Date(event.date), "MMM dd, yyyy")}
           </Typography>
         </Box>
         <Box sx={iconRowStyle}>
-          <Clock4 size={16} />
+          <Clock4 size={16} color="#828484" />
           <Typography variant="body2">
             {format(new Date(event.date), "p")}
           </Typography>
         </Box>
         <Box sx={iconRowStyle}>
-          <MapPin size={16} />
+          <MapPin size={16} color="#828484" />
           <Typography variant="body2">{event.location}</Typography>
         </Box>
         <Box sx={{ ...iconRowStyle, mt: 1 }}>
-          <Users size={16} />
+          <Users size={16} color="#828484" />
           <Typography variant="body2">
             {count} {capacity ? `/ ${capacity}` : ""} participants
           </Typography>
         </Box>
       </CardContent>
+      {event.tags && event.tags.length > 0 && (
+        <Stack
+          direction="row"
+          spacing={1}
+          flexWrap="wrap"
+          sx={{
+            mb: 2,
+            columnGap: 0.1,
+            rowGap: 0.5,
+            px: 2,
+            py: 0.25,
+          }}
+        >
+          {event.tags.map((tag) => (
+            <Chip
+              key={tag.id}
+              label={tag.name}
+              size="small"
+              sx={{
+                fontSize: "0.7rem",
+                height: "20px",
+                bgcolor: "#f8f9fa",
+                border: "none",
+                color: "#828484",
+                "&:hover": {
+                  bgcolor: "#e0e0e0",
+                },
+              }}
+            />
+          ))}
+        </Stack>
+      )}
 
       <CardActions sx={{ p: 2, pt: 0 }}>
         <Box sx={{ display: "flex", gap: 1, width: "100%", flexWrap: "wrap" }}>
-          <Button
-            size="small"
-            variant="contained"
-            color="primary"
-            onClick={onView}
-            sx={{
-              flex: 1,
-              textTransform: "none",
-              fontWeight: 600,
-              "&:focus": { outline: "none" },
-            }}
-          >
+          <GradientButton colors={BLUE} onClick={onView}>
             {viewLabel}
-          </Button>
+          </GradientButton>
 
           {isLoggedIn ? (
             <>
               {isOrganizer ? (
                 <>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={onEdit}
-                    sx={{
-                      flex: 1,
-                      textTransform: "none",
-                      fontWeight: 600,
-                      backgroundColor: "#2E8B57",
-                      "&:hover": { backgroundColor: "#37a768" },
-                    }}
-                  >
+                  <GradientButton colors={GREEN} onClick={onEdit}>
                     Edit
-                  </Button>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="error"
+                  </GradientButton>
+                  <GradientButton
+                    colors={CORAL}
                     onClick={onDelete}
                     disabled={isLoading}
-                    sx={{
-                      flex: 1,
-                      textTransform: "none",
-                      fontWeight: 600,
-                    }}
                   >
                     Delete
-                  </Button>
+                  </GradientButton>
                 </>
               ) : isParticipant ? (
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="error"
+                <GradientButton
+                  colors={GRAY}
                   onClick={onLeave}
                   disabled={isLoading}
-                  sx={{
-                    flex: 1,
-                    textTransform: "none",
-                    fontWeight: 600,
-                  }}
                 >
                   Leave
-                </Button>
+                </GradientButton>
               ) : (
-                <Button
-                  size="small"
-                  variant="contained"
+                <GradientButton
+                  colors={BLUE}
                   onClick={onJoin}
                   disabled={isFull || isLoading}
-                  sx={{
-                    flex: 1,
-                    textTransform: "none",
-                    fontWeight: 600,
-                  }}
                 >
                   Join
-                </Button>
+                </GradientButton>
               )}
             </>
           ) : (
-            <Button
-              size="small"
-              variant="contained"
-              onClick={onJoin}
-              disabled={isLoading}
-              sx={{
-                flex: 1,
-                textTransform: "none",
-                fontWeight: 600,
-                backgroundColor: "#2E8B57",
-                "&:hover": { backgroundColor: "#37a768" },
-              }}
-            >
+            <GradientButton colors={BLUE} onClick={onJoin}>
               Join Event
-            </Button>
+            </GradientButton>
           )}
         </Box>
       </CardActions>

@@ -27,44 +27,63 @@ async function main() {
   });
 
   const now = new Date();
+  const officialTags = ['Tech', 'Education', 'Social', 'Music', 'Sport', 'Workshop'];
+  const titles = ['Workshop', 'Seminar', 'Hackathon', 'Networking', 'Conference', 'Masterclass'];
+  const locations = [
+    'Kyiv',
+    'Lviv',
+    'Odesa',
+    'Dnipro',
+    'Remote',
+    'Kharkiv',
+    'Ivano-Frankivsk',
+    'Vinnytsia',
+    'Zaporizhzhia',
+    'Remote',
+  ];
+
   const eventsToCreate: any[] = [
     {
-      title: 'Tech Meetup 2026',
-      description: 'A gathering for tech enthusiasts to share ideas and network.',
+      title: 'Global Tech Expo',
+      description: 'A major gathering for tech enthusiasts to share ideas and network.',
       date: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
-      location: 'Kyiv, Tech Hub',
-      capacity: 50,
+      location: 'Kyiv',
+      capacity: 100,
       visibility: 'Public',
       organizer: { connect: { id: user1.id } },
-      tags: { connectOrCreate: [{ where: { name: 'Tech' }, create: { name: 'Tech' } }] },
+      tags: {
+        connectOrCreate: [
+          { where: { name: 'Tech' }, create: { name: 'Tech' } },
+          { where: { name: 'Social' }, create: { name: 'Social' } },
+        ],
+      },
     },
   ];
 
-  const titles = ['Workshop', 'Seminar', 'Hackathon', 'Networking', 'Conference', 'Masterclass'];
-  const topics = [
-    'JavaScript',
-    'NestJS',
-    'CSS Animations',
-    'UI/UX Design',
-    'Database Optimization',
-  ];
+  for (let i = 1; i <= 20; i++) {
+    const mainTagName = officialTags[i % officialTags.length];
+    const secondaryTagName = officialTags[(i + 2) % officialTags.length];
+    const eventTitle = titles[i % titles.length];
+    const eventLocation = locations[i % locations.length];
 
-  for (let i = 1; i <= 17; i++) {
     eventsToCreate.push({
-      title: `${topics[i % topics.length]} ${titles[i % titles.length]} #${i}`,
-      description: `This is a randomly generated event description for ${topics[i % topics.length]}. Highly recommended for developers!`,
+      title: `${mainTagName} ${eventTitle}`,
+      description: `Join our ${mainTagName.toLowerCase()} event. An excellent opportunity for networking and professional growth in ${eventLocation}.`,
       date: new Date(now.getTime() + (i + 14) * 24 * 60 * 60 * 1000),
-      location: i % 2 === 0 ? 'Kyiv, Online' : 'Lviv, Remote',
-      capacity: 10 + i * 5,
+      location: eventLocation,
+      capacity: 15 + i * 2,
       visibility: 'Public',
       organizer: { connect: { id: i % 2 === 0 ? user1.id : user2.id } },
       tags: {
         connectOrCreate: [
           {
-            where: { name: topics[i % topics.length] },
-            create: { name: topics[i % topics.length] },
+            where: { name: mainTagName },
+            create: { name: mainTagName },
           },
-          { where: { name: 'Random' }, create: { name: 'Random' } },
+          {
+            where: { name: secondaryTagName },
+            create: { name: secondaryTagName },
+          },
         ],
       },
     });
@@ -84,7 +103,7 @@ async function main() {
     });
   }
 
-  console.log('Seed completed: 2 users and 20 events created.');
+  console.log('Seed completed successfully.');
 }
 
 main()

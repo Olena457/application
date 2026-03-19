@@ -1,4 +1,3 @@
-// 
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,8 +31,17 @@ export default function Layout() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        position="static"
-        sx={{ backgroundColor: "#1976d2", boxShadow: "none" }}
+        position="fixed"
+        sx={{
+          backgroundImage:
+            "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+          backgroundColor: "transparent",
+          color: "white",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          boxShadow: "none",
+          paddingTop: "8px",
+          paddingBottom: "8px",
+        }}
       >
         <Toolbar
           sx={{
@@ -44,7 +52,12 @@ export default function Layout() {
         >
           <Logo />
 
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <DesktopNav
               token={token}
               userName={displayName}
@@ -58,7 +71,11 @@ export default function Layout() {
               aria-label="open drawer"
               edge="end"
               onClick={() => setMobileOpen(true)}
-              sx={{ display: { sm: "none" }, ml: 1, color: "white" }}
+              sx={{
+                display: { sm: "none" },
+                ml: 1,
+                color: "white",
+              }}
             >
               <Menu size={28} />
             </IconButton>
@@ -74,7 +91,15 @@ export default function Layout() {
         handleLogout={handleLogout}
       />
 
-      <Container maxWidth="xl" sx={{ mt: 3 }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          mt: {
+            xs: 11,
+            lg: 12,
+          },
+        }}
+      >
         <Outlet />
       </Container>
     </Box>

@@ -9,10 +9,10 @@ export const useNavStyles = () => {
     fontSize: { sm: "0.85rem", md: "0.9rem" },
     display: "flex",
     alignItems: "center",
+    borderRadius: { xs: "8px", md: "10px" },
     gap: "4px",
     mx: 0.2,
     px: 1.5,
-    borderRadius: "8px",
     color: "white",
     backgroundColor: isActive(path)
       ? "rgba(255, 255, 255, 0.25)"

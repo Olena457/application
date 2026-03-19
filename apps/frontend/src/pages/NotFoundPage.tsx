@@ -25,7 +25,28 @@ export default function NotFoundPage() {
         <Button
           variant="contained"
           onClick={() => navigate("/events")}
-          sx={{ py: 1.5, px: 4, borderRadius: "8px" }}
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            borderRadius: { xs: "8px", md: "10px" },
+            py: 1.5,
+            px: 4,
+            backgroundImage:
+              "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+            backgroundColor: "transparent",
+            color: "white",
+            border: "none",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            transition: "all 0.3s ease",
+
+            "&:hover": {
+              backgroundImage:
+                "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+            },
+
+            "&:focus": { outline: "none" },
+          }}
         >
           Back to Events
         </Button>

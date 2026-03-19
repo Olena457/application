@@ -30,9 +30,10 @@ export const AuthAlert = ({
         severity={severity}
         variant="filled"
         sx={{
-          backgroundColor: severity === "warning" ? "#ff6b6b" : undefined,
+          backgroundColor: severity === "warning" ? "#fa7474" : undefined,
           color: severity === "warning" ? "#000" : "#fff",
           fontWeight: 600,
+          borderRadius: 2,
         }}
         action={
           showLoginButton ? (

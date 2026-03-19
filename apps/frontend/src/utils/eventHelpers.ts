@@ -1,4 +1,4 @@
-import type { EventFormData } from "../components/EventForm";
+import type { EventFormData } from "../utils/event.validation";
 
 export const formatEventPayload = (data: EventFormData) => {
   return {

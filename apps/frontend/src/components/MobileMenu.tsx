@@ -53,21 +53,40 @@ export const MobileMenu = ({
   ];
 
   return (
-    <Drawer anchor="right" open={open} onClose={onClose}>
+ <Drawer 
+  anchor="right" 
+  open={open} 
+  onClose={onClose}
+  sx={{
+    display: { xs: 'block', sm: 'none' },
+    '& .MuiDrawer-paper': {
+      width: 280,
+      backgroundColor: "#f8f9fa",
+    },
+  }}
+>
+
       <Box
-        sx={{ width: 280, height: "100%", position: "relative", pt: 1 }}
+        sx={{
+          width: 280,
+          height: "100%",
+          position: "relative",
+          pt: 1,
+          backgroundColor: "#f8f9fa",
+        }}
         role="presentation"
       >
         <Box
           sx={{
             display: "flex",
+            mt: 2,
             alignItems: "center",
             justifyContent: "space-between",
             px: 2,
             py: 1.5,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 10 }}>
             <User size={20} />
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {userName}
@@ -77,7 +96,7 @@ export const MobileMenu = ({
           <IconButton
             onClick={onClose}
             size="small"
-            sx={{ color: "text.secondary" }}
+            sx={{ color: "text.secondary", mt: 1 }}
           >
             <X size={24} />
           </IconButton>
@@ -108,12 +127,8 @@ export const MobileMenu = ({
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  primaryTypographyProps={{
-                    fontWeight: isActive(item.path) ? 600 : 400,
-                  }}
-                />
+
+                <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
           ))}

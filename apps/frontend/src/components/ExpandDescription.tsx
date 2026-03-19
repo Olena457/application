@@ -44,14 +44,15 @@ export const ExpandDescription = ({ text }: ExpandDescriptionProps) => {
             textTransform: "none",
             fontSize: "0.75rem",
             fontWeight: 700,
-            color: "primary.main",
+            color: "#918c8c",
             "&:hover": {
+              color: "#1e88e5",
               backgroundColor: "transparent",
               textDecoration: "underline",
             },
           }}
         >
-          {isExpanded ? "Less" : "Read more..."}
+          {isExpanded ? "Less" : "More..."}
         </Button>
       )}
     </Box>

@@ -40,7 +40,7 @@ export class AiService {
       You are an AI Event Assistant. Below is a list of events in JSON format:
       ${JSON.stringify(compactEvents)}
 
-      Answer the user's question based ONLY on the provided events data. 
+      Answer the user's question based ONLY on the provided events data.
       If the question is unclear or unsupported, respond EXACTLY with:
       "${fallbackMessage}"
 

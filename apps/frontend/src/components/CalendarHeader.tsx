@@ -9,8 +9,11 @@ import {
 } from "@mui/material";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
-import { Views} from "react-big-calendar";
+import { Views } from "react-big-calendar";
 import type { View } from "react-big-calendar";
+
+const DEEP_OCEAN: [string, string] = ["#1A2980", "#1eb4ea"];
+
 interface CalendarHeaderProps {
   date: Date;
   view: View;
@@ -41,9 +44,17 @@ export const CalendarHeader = ({
         <Box>
           <Typography
             variant="h4"
+            component="h1"
+            gutterBottom
+            fontWeight="bold"
             sx={{
-              fontWeight: 700,
+              display: "inline-block",
+              width: "fit-content",
+              mb: 3,
               fontSize: { xs: "1.75rem", sm: "2.125rem" },
+              background: `linear-gradient(135deg, ${DEEP_OCEAN[0]} 10%, ${DEEP_OCEAN[1]} 90%)`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
             My Events
@@ -56,7 +67,26 @@ export const CalendarHeader = ({
           variant="contained"
           startIcon={<Plus size={18} />}
           onClick={onCreateClick}
-          sx={{ textTransform: "none" }}
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            borderRadius: { xs: "8px", md: "10px" },
+            backgroundImage:
+              "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+            backgroundColor: "transparent",
+            color: "white",
+            border: "none",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            transition: "all 0.3s ease",
+
+            "&:hover": {
+              backgroundImage:
+                "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+            },
+
+            "&:focus": { outline: "none" },
+          }}
         >
           Create Event
         </Button>
@@ -111,8 +141,58 @@ export const CalendarHeader = ({
           onChange={(_, v) => v && onViewChange(v)}
           sx={toggleGroupStyle}
         >
-          <ToggleButton value={Views.MONTH}>Month</ToggleButton>
-          <ToggleButton value={Views.WEEK}>Week</ToggleButton>
+          <ToggleButton
+            sx={{
+              flex: 1,
+              textTransform: "none",
+              fontWeight: 600,
+              borderRadius: { xs: "8px", md: "10px" },
+              backgroundImage:
+                "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+              backgroundColor: "transparent",
+              color: "white",
+              border: "none",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                backgroundImage:
+                  "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+              },
+
+              "&:focus": { outline: "none" },
+            }}
+            value={Views.MONTH}
+          >
+            Month
+          </ToggleButton>
+          <ToggleButton
+            sx={{
+              flex: 1,
+              textTransform: "none",
+              fontWeight: 600,
+              borderRadius: { xs: "8px", md: "10px" },
+              backgroundImage:
+                "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+              backgroundColor: "transparent",
+              color: "white",
+              border: "none",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                backgroundImage:
+                  "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+              },
+
+              "&:focus": { outline: "none" },
+            }}
+            value={Views.WEEK}
+          >
+            Week
+          </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
     </>

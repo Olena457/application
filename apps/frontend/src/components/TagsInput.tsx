@@ -1,3 +1,4 @@
+
 import { Autocomplete, Chip, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 import type { Control } from "react-hook-form";
@@ -27,8 +28,15 @@ export const TagsInput = ({ control, name, label }: TagsInputProps) => {
           multiple
           options={AVAILABLE_TAGS}
           value={value || []}
-          onChange={(_, newValue) => onChange(newValue)}
-          renderTags={(tagValue, getTagProps) =>
+          onChange={(_, newValue) => {
+            if (newValue.length <= 5) {
+              onChange(newValue);
+            }
+          }}
+          getOptionDisabled={(option) => 
+            (value?.length >= 5) && !value.includes(option)
+          }
+          renderValue={(tagValue, getTagProps) =>
             tagValue.map((option: string, index: number) => {
               const { key, ...tagProps } = getTagProps({ index });
               return (
@@ -38,6 +46,7 @@ export const TagsInput = ({ control, name, label }: TagsInputProps) => {
                   {...tagProps}
                   variant="outlined"
                   size="small"
+                  sx={{ borderRadius: '6px' }}
                 />
               );
             })
@@ -46,14 +55,19 @@ export const TagsInput = ({ control, name, label }: TagsInputProps) => {
             <TextField
               {...params}
               label={label}
-              placeholder="Select categories"
+              placeholder={value?.length >= 5 ? "" : "Select categories"}
               margin="normal"
               fullWidth
               error={!!error}
               helperText={error?.message}
             />
           )}
-          sx={{ mt: 2 }}
+          sx={{ 
+            mt: 2,
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "8px"
+            }
+          }}
         />
       )}
     />

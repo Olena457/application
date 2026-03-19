@@ -1,3 +1,4 @@
+
 import { Box, Button, Typography, IconButton, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import { List, Calendar, Plus, User, LogOut } from "lucide-react";
@@ -16,6 +17,9 @@ export const DesktopNav = ({
   navButtonStyle,
   handleLogout,
 }: DesktopNavProps) => {
+  const formattedName =
+    userName.length > 6 ? `${userName.substring(0, 6)}...` : userName;
+
   return (
     <Box
       sx={{
@@ -52,29 +56,51 @@ export const DesktopNav = ({
             Create
           </Button>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              ml: 1.5,
-              mr: 1,
-              gap: "8px",
-              padding: "4px 8px",
-              borderRadius: "20px",
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-            }}
-          >
-            <User size={16} color="white" />
-            <Typography
-              variant="body2"
-              sx={{ color: "white", fontWeight: 500, fontSize: "0.85rem" }}
+          <Tooltip title={userName}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                ml: 1.5,
+                mr: 1,
+                gap: "8px",
+              }}
             >
-              {userName}
-            </Typography>
-          </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "6px",
+                  borderRadius: "50%",
+                  backgroundColor: "rgba(255, 255, 255, 0.15)",
+                }}
+              >
+                <User size={16} color="white" />
+              </Box>
+
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "white",
+                  fontWeight: 500,
+                  fontSize: "0.85rem",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {formattedName}
+              </Typography>
+            </Box>
+          </Tooltip>
 
           <Tooltip title="Sign Out">
-            <IconButton onClick={handleLogout} sx={{ color: "white", p: 1 }}>
+            <IconButton
+              onClick={handleLogout}
+              sx={{
+                color: "white",
+                p: 1,
+              }}
+            >
               <LogOut size={18} />
             </IconButton>
           </Tooltip>

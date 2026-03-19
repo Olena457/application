@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   TextField,
@@ -8,15 +8,21 @@ import {
   Paper,
   CircularProgress,
   Alert,
+  InputAdornment,
 } from "@mui/material";
-import { Sparkles, Send } from "lucide-react";
+import { Sparkles, Send, X } from "lucide-react";
 import { useAskAiAssistantMutation } from "../store/api/eventsApi";
 import { AiAssistantModal } from "./AiAssistantModal";
 
 export const AiAssistant = () => {
   const [question, setQuestion] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [askAi, { data, isLoading, error }] = useAskAiAssistantMutation();
+  const [isAborted, setIsAborted] = useState(false);
+  const [askAi, { data, isLoading, error, reset }] =
+    useAskAiAssistantMutation();
+
+  const promiseRef = useRef<any>(null);
 
   useEffect(() => {
     if (data?.answer) {
@@ -24,34 +30,64 @@ export const AiAssistant = () => {
     }
   }, [data]);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuestion(e.target.value);
+    if (error || isAborted) {
+      reset();
+      setIsAborted(false);
+    }
+  };
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const trimmedQuestion = question.trim();
 
     if (!trimmedQuestion || isLoading) return;
 
+    reset();
+    setIsAborted(false);
+
     try {
-      await askAi({ question: trimmedQuestion }).unwrap();
+      const promise = askAi({ question: trimmedQuestion });
+      promiseRef.current = promise;
+      await promise.unwrap();
       setQuestion("");
-    } catch (err) {
-      console.error("AI Error:", err);
+    } catch (err: any) {
+      if (err.name === "AbortError" || err.status === "FETCH_ERROR") {
+        setIsAborted(true);
+      }
+    } finally {
+      promiseRef.current = null;
     }
+  };
+
+  const handleCancel = () => {
+    if (promiseRef.current) {
+      promiseRef.current.abort();
+      promiseRef.current = null;
+    }
+    setIsAborted(true);
+    reset();
+    setQuestion("");
   };
 
   return (
     <Paper
-      elevation={0}
-      variant="outlined"
       sx={{
         p: 2,
+        pb: "15px",
+        flex: 1,
         borderRadius: 2,
         bgcolor: "background.paper",
         border: "1px solid",
-        borderColor: "divider",
+        borderColor: isFocused ? "primary.main" : "divider",
+        maxWidth: 500,
+        width: "100%",
+        transition: "all 0.2s ease-in-out",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-        <Sparkles size={20} color="#1976d2" />
+        <Sparkles size={20} color="#1e88e5" />
         <Typography variant="subtitle1" fontWeight="bold">
           AI Event Assistant
         </Typography>
@@ -66,11 +102,53 @@ export const AiAssistant = () => {
           fullWidth
           size="small"
           variant="outlined"
-          placeholder="Ask about your events..."
+          placeholder={isFocused || question ? "" : "Ask about your events..."}
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          disabled={isLoading}
+          onChange={handleInputChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           autoComplete="off"
+          slotProps={{
+            htmlInput: {
+              maxLength: 150, 
+            },
+            input: {
+              endAdornment: question && (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={
+                      isLoading
+                        ? handleCancel
+                        : () => {
+                            setQuestion("");
+                            reset();
+                          }
+                    }
+                    edge="end"
+                    size="small"
+                    sx={{ color: isLoading ? "error.main" : "inherit" }}
+                  >
+                    <X size={18} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "8px",
+              backgroundColor: "#ffffff",
+              "& fieldset": {
+                transition: "border-color 0.2s",
+              },
+              "&:hover fieldset": {
+                borderColor: "#1976d2",
+              },
+            },
+            "& input": {
+              py: 1,
+            },
+          }}
         />
         <IconButton
           type="submit"
@@ -79,40 +157,40 @@ export const AiAssistant = () => {
             width: 40,
             height: 40,
             display: "flex",
-            p: 1,
             borderRadius: "50%",
             alignItems: "center",
             justifyContent: "center",
-            bgcolor: "primary.main",
+            bgcolor: "#cecbcb",
             color: "white",
-            transition: "transform 0.2s ease, background-color 0.2s ease",
-
+            flexShrink: 0,
+            transition: "all 0.2s ease",
             "&:hover": {
-              bgcolor: "primary.dark",
-              transform: "scale(1.1)",
+              bgcolor: "#ade3f3",
+              transform: "scale(1.05)",
             },
-
-            "&:focus": {
-              bgcolor: "secondary.main",
-            },
-
             "&.Mui-disabled": {
-              bgcolor: "action.disabledBackground",
+              bgcolor: "#ebedee",
               color: "action.disabled",
             },
           }}
         >
           {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
+            <CircularProgress size={24} color="primary" />
           ) : (
-            <Send size={20} />
+            <Send size={20} color="#1e88e5" />
           )}
         </IconButton>
       </Box>
 
-      {error && !isLoading && (
-        <Alert severity="error" sx={{ mt: 1 }}>
-          Failed to get response. Please try again later.
+      {isAborted && !isLoading && (
+        <Alert severity="info" sx={{ mt: 1.5, py: 0, bgcolor: "transparent" }}>
+          Request stopped by user.
+        </Alert>
+      )}
+
+      {error && !isLoading && !isAborted && (
+        <Alert severity="error" sx={{ mt: 1.5, py: 0 }}>
+          Failed to get response.
         </Alert>
       )}
 

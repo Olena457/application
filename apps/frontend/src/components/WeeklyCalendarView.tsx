@@ -41,7 +41,7 @@ export const WeeklyCalendarView = ({
         return (
           <Paper
             key={day.toString()}
-            elevation={0}
+            elevation={3}
             sx={{
               p: 2,
               minHeight: "200px",

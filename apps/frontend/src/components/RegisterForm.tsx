@@ -1,9 +1,15 @@
 
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import {
+  registerSchema 
+} from "../utils/auth.validation";
+
+import type { RegisterFormData } from "../utils/auth.validation";
+
 import { Eye, EyeOff } from "lucide-react";
 import {
   Box,
@@ -13,36 +19,6 @@ import {
   TextField,
   Alert,
 } from "@mui/material";
-
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const nameRegex = /^[a-zA-Za-яА-ЯіІїЇєЄґҐ' ]+$/;
-
-const registerSchema = yup
-  .object({
-    email: yup
-      .string()
-      .matches(emailRegex, "Please enter a valid email address")
-      .required("Email is required"),
-    name: yup
-      .string()
-      .max(50, "Name is too long")
-      .matches(nameRegex, "Name must contain only letters")
-      .optional()
-      .default(""),
-    password: yup
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .matches(
-        passwordRegex,
-        "Password must include uppercase, lowercase, number and special character",
-      )
-      .required("Password is required"),
-  })
-  .required();
-
-export type RegisterFormData = yup.InferType<typeof registerSchema>;
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterFormData) => void;
@@ -140,8 +116,31 @@ export const RegisterForm = ({
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2, py: 1.5, fontWeight: 600 }}
         disabled={isLoading}
+        sx={{
+          flex: 1,
+          textTransform: "none",
+          mt: 3,
+          mb: 2,
+          py: 1.5,
+          fontWeight: 600,
+          borderRadius: { xs: "8px", md: "10px" },
+          backgroundImage:
+            "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+          backgroundColor: "transparent",
+          color: "white",
+          border: "none",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          transition: "all 0.3s ease",
+
+          "&:hover": {
+            backgroundImage:
+              "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+          },
+
+          "&:focus": { outline: "none" },
+        }}
       >
         {isLoading ? "Creating account..." : "Sign Up"}
       </Button>

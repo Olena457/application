@@ -8,11 +8,17 @@ import {
   useUpdateEventMutation,
 } from "../store/api/eventsApi";
 import type { RootState } from "../store";
-import { EventForm, type EventFormData } from "../components/EventForm";
+import { EventForm } from "../components/EventForm";
+import type { EventFormData } from "../utils/event.validation";
+
 
 import { formatEventPayload } from "../utils/eventHelpers";
 import { getApiErrorMessage } from "../utils/errorHelpers";
 import { EventDetailsSkeleton } from "../components/EventDetailsSkeleton";
+import { ArrowLeft } from "lucide-react";
+
+
+const DEEP_OCEAN: [string, string] = ["#1A2980", "#1eb4ea"];
 
 export default function EditEventPage() {
   const { id } = useParams<{ id: string }>();
@@ -71,35 +77,76 @@ export default function EditEventPage() {
   return (
     <Box
       sx={{
-        p: 3,
+        p: { xs: 1, sm: 3 },
+        borderRadius: 4,
         display: "flex",
+        backgroundColor: "#f8f9fa",
         justifyContent: "center",
-        minHeight: "80vh",
+        minHeight: "100vh",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
-      <Paper sx={{ p: 4, width: "100%", maxWidth: 600, borderRadius: "16px" }}>
-        <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-          Edit Event
-        </Typography>
-
-        <EventForm
-          initialValues={{
-            title: event.title,
-            description: event.description || "",
-            date: new Date(event.date),
-            location: event.location,
-            capacity: event.capacity ?? undefined,
-            visibility: (event.visibility as "Public" | "Private") || "Public",
-            tags:
-              event.tags?.map((t: any) => t.name || t).filter(Boolean) || [],
+      <Box sx={{ width: "100%", maxWidth: 600 }}>
+        <Button
+          onClick={() => navigate(-1)}
+          startIcon={<ArrowLeft size={20} />}
+          sx={{
+            mb: 3,
+            textTransform: "none",
+            color: "#333",
+            fontWeight: 500,
+            "&:hover": {
+              backgroundColor: "transparent",
+              opacity: 0.7,
+              borderRadius: 2,
+            },
           }}
-          onSubmit={handleOnSubmit}
-          isLoading={isUpdating}
-          onCancel={() => navigate(-1)}
-          apiError={getApiErrorMessage(updateError)}
-          submitLabel="Save Changes"
-        />
-      </Paper>
+        >
+          Back
+        </Button>
+        <Paper
+          elevation={3}
+          sx={{ p: 4, width: "100%", maxWidth: 600, borderRadius: "16px" }}
+        >
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            fontWeight="bold"
+            sx={{
+              display: "inline-block",
+              width: "fit-content",
+              mb: 3,
+              fontWeight: 600,
+              background: `linear-gradient(135deg, ${DEEP_OCEAN[0]} 10%, ${DEEP_OCEAN[1]} 90%)`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Edit Event
+          </Typography>
+
+          <EventForm
+            initialValues={{
+              title: event.title,
+              description: event.description || "",
+              date: new Date(event.date),
+              location: event.location,
+              capacity: event.capacity ?? undefined,
+              visibility:
+                (event.visibility as "Public" | "Private") || "Public",
+              tags:
+                event.tags?.map((t: any) => t.name || t).filter(Boolean) || [],
+            }}
+            onSubmit={handleOnSubmit}
+            isLoading={isUpdating}
+            onCancel={() => navigate(-1)}
+            apiError={getApiErrorMessage(updateError)}
+            submitLabel="Save Changes"
+          />
+        </Paper>
+      </Box>
     </Box>
   );
 }

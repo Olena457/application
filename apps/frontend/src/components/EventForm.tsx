@@ -1,58 +1,18 @@
+
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
-import { TagsInput } from "../components/TagsInput";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-  Typography,
-} from "@mui/material";
-
+import { Box, TextField, Typography } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-export const eventSchema = yup
-  .object({
-    title: yup.string().required("Title is required").min(3, "Title too short"),
-    description: yup.string().optional().default(""),
-    date: yup
-      .date()
-      .required("Date is required")
-      .min(new Date(), "Date cannot be in the past"),
-    location: yup.string().required("Location is required"),
-    capacity: yup
-      .number()
-      .transform((value, originalValue) =>
-        originalValue === "" ? undefined : value,
-      )
-      .nullable()
-      .optional()
-      .min(1, "Capacity must be at least 1")
-      .typeError("Capacity must be a number"),
-    visibility: yup
-      .string()
-      .oneOf(["Public", "Private"])
-      .required()
-      .default("Public"),
-    tags: yup
-      .array()
-      .of(yup.string())
-      .max(5, "You can select up to 5 tags")
-      .default([]),
-  })
-  .required();
-
-export type EventFormData = yup.InferType<typeof eventSchema>;
-
+import { TagsInput } from "../components/TagsInput";
+import { VisibilityFields } from "../components/VisibilityFields";
+import { FormActions } from "../components/FormActions";
+import { eventSchema } from "../utils/event.validation";
+import type { EventFormData } from "../utils/event.validation";
 interface EventFormProps {
   initialValues?: Partial<EventFormData>;
   onSubmit: (data: EventFormData) => Promise<void>;
@@ -81,14 +41,13 @@ export const EventForm = ({
   } = useForm<EventFormData>({
     resolver: yupResolver(eventSchema) as any,
     defaultValues: {
-      title: initialValues?.title || "",
-      description: initialValues?.description || "",
-      date: initialValues?.date || new Date(Date.now() + 24 * 60 * 60 * 1000),
-      location: initialValues?.location || "",
-      capacity: initialValues?.capacity || undefined,
-      visibility:
-        (initialValues?.visibility as "Public" | "Private") || "Public",
-      tags: initialValues?.tags || [],
+      title: "",
+      description: "",
+      date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      location: "",
+      visibility: "Public",
+      tags: [],
+      ...initialValues,
     },
   });
 
@@ -123,10 +82,13 @@ export const EventForm = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "auto",
-          overflowY: "visible",
-          px: 2,
+          borderRadius: "16px",
+          gap: 1,
+          px: { xs: 1, sm: 2 },
           width: "100%",
+          "& .MuiFormLabel-asterisk": {
+            color: "red",
+          },
         }}
       >
         <TextField
@@ -135,9 +97,16 @@ export const EventForm = ({
           fullWidth
           margin="normal"
           error={!!errors.title}
-          helperText={errors.title?.message}
+          placeholder="e.g., Teach Conference 2026"
           required
+          helperText={errors.title?.message}
+          slotProps={{
+            htmlInput: {
+              maxLength: 50,
+            },
+          }}
         />
+
         <TextField
           {...register("description")}
           label="Description"
@@ -145,6 +114,18 @@ export const EventForm = ({
           rows={3}
           fullWidth
           margin="normal"
+          placeholder="Describe what makes your event special..."
+          slotProps={{
+            htmlInput: {
+              maxLength: 300,
+            },
+          }}
+          error={!!errors.description}
+          helperText={
+            errors.description
+              ? errors.description.message
+              : `${watch("description")?.length || 0}/300`
+          }
         />
         <DateTimePicker
           label="Date & Time"
@@ -157,12 +138,10 @@ export const EventForm = ({
             textField: {
               fullWidth: true,
               margin: "normal",
+              required: true,
               error: !!errors.date,
               helperText: errors.date?.message as string,
             },
-            popper: {
-              disableRestoreFocus: true,
-            } as any,
           }}
         />
         <TextField
@@ -170,11 +149,21 @@ export const EventForm = ({
           label="Location"
           fullWidth
           margin="normal"
+          placeholder="e.g., Convention Center, San Francisco"
           error={!!errors.location}
-          helperText={errors.location?.message}
           required
+          helperText={
+            errors.location
+              ? errors.location.message
+              : `${watch("location")?.length || 0}/70`
+          }
+          slotProps={{
+            htmlInput: {
+              maxLength: 70,
+            },
+          }}
         />
-        <TagsInput control={control} name="tags" label="Event Tags" />
+        <TagsInput control={control} name="tags" label="Select categories" />
         <Box sx={{ mt: 1 }}>
           <TextField
             {...register("capacity")}
@@ -184,13 +173,24 @@ export const EventForm = ({
             placeholder="Leave empty for unlimited"
             error={!!errors.capacity}
             helperText={errors.capacity?.message}
-            onChange={(e) =>
-              setValue(
-                "capacity",
-                e.target.value === "" ? undefined : Number(e.target.value),
-              )
-            }
+            slotProps={{
+              htmlInput: { min: 1 },
+            }}
+            onChange={(e) => {
+              const val = e.target.value;
+
+              if (val === "") {
+                setValue("capacity", undefined, { shouldValidate: true });
+                return;
+              }
+
+              const num = Number(val);
+              const finalValue = num < 1 ? 1 : num;
+
+              setValue("capacity", finalValue, { shouldValidate: true });
+            }}
           />
+
           <Typography
             variant="caption"
             color="text.secondary"
@@ -199,81 +199,20 @@ export const EventForm = ({
             Maximum number of participants. Leave empty for unlimited capacity.
           </Typography>
         </Box>
-
-        <FormControl component="fieldset" sx={{ mt: 3, mb: 2 }}>
-          <FormLabel sx={{ fontWeight: "bold", mb: 1, color: "text.primary" }}>
-            Visibility
-          </FormLabel>
-          <RadioGroup
-            value={visibilityValue || "Public"}
-            sx={{ pl: 1 }}
-            onChange={(e) =>
-              setValue("visibility", e.target.value as "Public" | "Private")
-            }
-          >
-            <FormControlLabel
-              value="Public"
-              control={<Radio size="small" />}
-              label={
-                <Typography variant="body2">
-                  <strong>Public</strong> - Anyone can see and join
-                </Typography>
-              }
-            />
-            <FormControlLabel
-              value="Private"
-              control={<Radio size="small" />}
-              label={
-                <Typography variant="body2">
-                  <strong>Private</strong> - Only invited people
-                </Typography>
-              }
-            />
-          </RadioGroup>
-        </FormControl>
-
+        <VisibilityFields
+          value={visibilityValue || "Public"}
+          onChange={(val) => setValue("visibility", val)}
+        />
         {apiError && (
           <Typography color="error" variant="body2" sx={{ mb: 1 }}>
             {apiError}
           </Typography>
         )}
-
-        <Box sx={{ display: "flex", gap: 2, mt: "auto", pt: 2, pb: 2 }}>
-          <Button
-            variant="contained"
-            onClick={onCancel}
-            disabled={isLoading}
-            sx={{
-              flex: 1,
-              borderRadius: "10px",
-              textTransform: "none",
-              fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
-              py: 1,
-              fontWeight: 500,
-              backgroundColor: "#1976d2",
-              "&:hover": { backgroundColor: "#0582ff" },
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isLoading}
-            sx={{
-              flex: 1,
-              borderRadius: "10px",
-              textTransform: "none",
-              fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
-              py: 1,
-              fontWeight: 500,
-              backgroundColor: "#1976d2",
-              "&:hover": { backgroundColor: "#0582ff" },
-            }}
-          >
-            {isLoading ? "Processing..." : submitLabel}
-          </Button>
-        </Box>
+        <FormActions
+          isLoading={isLoading}
+          onCancel={onCancel}
+          submitLabel={submitLabel}
+        />
       </Box>
     </LocalizationProvider>
   );

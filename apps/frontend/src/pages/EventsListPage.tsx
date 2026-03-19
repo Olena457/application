@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiAssistant } from "../components/AiAssistant";
 import { EventsSkeleton } from "../components/EventsSkeleton";
-import {
-  Box,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import {
   useGetPublicEventsQuery,
@@ -22,10 +20,14 @@ import { PaginationControls } from "../components/PaginationControls";
 import { EventsError } from "../components/EventsError";
 import { EventsHeader } from "../components/EventsHeader";
 
+const DEEP_OCEAN: [string, string] = ["#1A2980", "#1eb4ea"];
+
 export default function EventsListPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
+
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [alertConfig, setAlertConfig] = useState<{
     open: boolean;
@@ -56,16 +58,40 @@ export default function EventsListPage() {
   const events = data?.events || [];
   const lastPage = data?.lastPage || 1;
 
+  const availableTags = useMemo(() => {
+    const tagsSet = new Set<string>();
+    events.forEach((event) => {
+      event.tags?.forEach((tag: any) => {
+        const tagName = typeof tag === "object" ? tag.name : tag;
+        if (tagName) tagsSet.add(tagName);
+      });
+    });
+    return Array.from(tagsSet);
+  }, [events]);
+
   const filteredEvents = useMemo(() => {
     if (!events) return [];
     const q = searchQuery.toLowerCase();
 
     return events
-      .filter(
-        (e) =>
+      .filter((e) => {
+        const matchesQuery =
           e.title.toLowerCase().includes(q) ||
-          e.location.toLowerCase().includes(q),
-      )
+          e.location.toLowerCase().includes(q);
+
+        
+        const matchesTags =
+          selectedTags.length === 0 ||
+          selectedTags.some((selectedTag) =>
+            e.tags?.some((eventTag: any) => {
+              const name =
+                typeof eventTag === "object" ? eventTag.name : eventTag;
+              return name === selectedTag;
+            }),
+          );
+
+        return matchesQuery && matchesTags;
+      })
       .map((event) => ({
         ...event,
         isParticipant:
@@ -75,7 +101,7 @@ export default function EventsListPage() {
           }) ?? false,
         isOrganizer: String(event.organizerId) === String(userId),
       }));
-  }, [events, searchQuery, userId]);
+  }, [events, searchQuery, userId, selectedTags]); 
 
   const handleJoinAction = async (eventId: string) => {
     if (!token) {
@@ -132,69 +158,99 @@ export default function EventsListPage() {
     }
   };
 
- if (isLoading) return <EventsSkeleton count={8} />;
-
+  if (isLoading) return <EventsSkeleton count={8} />;
   if (error) return <EventsError onRetry={() => refetch()} />;
 
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     gap: 2,
-    //     my: 3,
-    //     flexDirection: { sx: "column", md: "row" },
-    //     alignItems: { md: "flex-start" },
-    //   }}
-    // >
-    //   <Box sx={{ py: 2, flex: 1 }}>
-    //     <EventsHeader
-    //       searchQuery={searchQuery}
-    //       onSearchChange={(val) => {
-    //         setSearchQuery(val);
-    //         setPage(1);
-    //       }}
-    //     />
-
-    //     {token && (
-    //       <Box sx={{
-    //         my: 3, width: { xs: "100%", md: "400px" },
-    //       mt: { xs: 0, md: '40px' }
-    //       }}>
-    //         <AiAssistant />
-    //       </Box>
-    //     )}
-    //   </Box>
-    <Box sx={{ py: 2, px: { xs: 1, lg: 4 } }}>
+    <Box
+      sx={{
+        py: 2,
+        px: { xs: 1, lg: 4 },
+        borderRadius: 4,
+        backgroundColor: "#f8f9fa",
+      }}
+    >
+      <Box>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          fontWeight="bold"
+          sx={{
+            display: "inline-block",
+            width: "fit-content",
+            fontSize: { xs: "1.75rem", sm: "2.125rem" },
+            background: `linear-gradient(135deg, ${DEEP_OCEAN[0]} 10%, ${DEEP_OCEAN[1]} 90%)`,
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          Discover Events
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 2,
+            fontSize: { xs: "0.70rem", sm: "0.875rem" },
+            lineHeight: { xs: 1.2, sm: 1.43 },
+          }}
+        >
+          Find and join exciting events happening around you
+        </Typography>
+      </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           px: { xs: 1, lg: 10 },
-          gap: 2,
-          mb: 4,
-          alignItems: { md: "space-around" },
+          gap: 3,
+          mb: 3,
+          alignItems: { xs: "stretch" },
+          justifyContent: "center",
         }}
       >
+        {token && (
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              maxWidth: { xs: "500px", md: "none" },
+            }}
+          >
+            <AiAssistant />
+          </Box>
+        )}
+
         <Box sx={{ flex: 1 }}>
+          {/* props EventsHeader */}
           <EventsHeader
             searchQuery={searchQuery}
             onSearchChange={(val) => {
               setSearchQuery(val);
               setPage(1);
             }}
+            selectedTags={selectedTags}
+            onTagsChange={(tags: string[]) => {
+              setSelectedTags(tags);
+              setPage(1);
+            }}
+            availableTags={availableTags}
           />
         </Box>
-
-        {token && (
-          <Box
-            sx={{
-              width: { xs: "100%", md: "450px", lg: "550px" },
-            }}
-          >
-            <AiAssistant />
-          </Box>
-        )}
       </Box>
+
+      {/* Empty State*/}
+      {filteredEvents.length === 0 && (
+        <Typography
+          variant="h6"
+          textAlign="center"
+          color="text.secondary"
+          sx={{ py: 10 }}
+        >
+          No events match the selected tags or search query.
+        </Typography>
+      )}
 
       <EventsList
         events={filteredEvents}

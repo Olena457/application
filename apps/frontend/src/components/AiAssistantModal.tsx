@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { forwardRef } from "react";
 import {
   Box,
   Typography,
@@ -8,6 +9,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Fade,
 } from "@mui/material";
 import { Sparkles, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -18,6 +20,22 @@ interface AiAssistantModalProps {
   answer: string;
 }
 
+const Transition = forwardRef(function Transition(
+  props: any,
+  ref: React.Ref<unknown>,
+) {
+  return (
+    <Fade
+      ref={ref}
+      {...props}
+      timeout={{
+        enter: 1000,
+        exit: 800,
+      }}
+    />
+  );
+});
+
 export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
   open,
   onClose,
@@ -27,7 +45,11 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
+      slots={{
+        transition: Transition,
+      }}
       maxWidth="sm"
+      sx={{ "& .MuiDialog-paper": { borderRadius: 5 } }}
       fullWidth
       scroll="paper"
     >
@@ -71,9 +93,28 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
           onClick={onClose}
           variant="contained"
           color="primary"
-          sx={{ borderRadius: "8px" }}
+          sx={{
+            textTransform: "none",
+            fontWeight: 600,
+            borderRadius: { xs: "8px", md: "10px" },
+            backgroundImage:
+              "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+            backgroundColor: "transparent",
+            color: "white",
+            border: "none",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            transition: "all 0.3s ease",
+
+            "&:hover": {
+              backgroundImage:
+                "linear-gradient(to bottom, #0d47a1 0%, #1e88e5 100%)",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+            },
+
+            "&:focus": { outline: "none" },
+          }}
         >
-          Got it
+          Close
         </Button>
       </DialogActions>
     </Dialog>

@@ -5,6 +5,9 @@ import { useLoginMutation } from "../store/api/authApi";
 import { LoginForm } from "../components/LoginForm";
 import type { LoginFormData } from "../components/LoginForm";
 
+
+const DEEP_OCEAN: [string, string] = ["#1A2980", "#1eb4ea"];
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [login, { isLoading, error }] = useLoginMutation();
@@ -46,12 +49,21 @@ export default function LoginPage() {
             borderRadius: "16px",
           }}
         >
+         
           <Typography
             variant="h4"
             component="h1"
             gutterBottom
-            align="center"
-            fontWeight={700}
+            fontWeight="bold"
+            sx={{
+              display: "inline-block",
+              width: "fit-content",
+              mb: 3,
+              fontWeight: 600,
+              background: `linear-gradient(135deg, ${DEEP_OCEAN[0]} 10%, ${DEEP_OCEAN[1]} 90%)`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
           >
             Sign In
           </Typography>
@@ -61,7 +73,7 @@ export default function LoginPage() {
             color="text.secondary"
             sx={{ mb: 3 }}
           >
-            Welcome back! Please enter your details.
+            Welcome back! Please enter your credentials.
           </Typography>
 
           <LoginForm
