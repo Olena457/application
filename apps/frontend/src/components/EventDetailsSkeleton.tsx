@@ -5,7 +5,7 @@ export const EventDetailsSkeleton = () => (
     sx={{
       mt: 4,
       display: "flex",
-      flexDirection: { xs: "column", "@media (min-width:768px)": "row" },
+      flexDirection: { xs: "column", "@media sx={{ minWidth: 768px }}": "row" },
       gap: 3,
     }}
   >
