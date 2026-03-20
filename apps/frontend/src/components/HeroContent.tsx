@@ -1,5 +1,6 @@
 import { Box, Button, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 interface HeroContentProps {
   userName?: string | null;
@@ -11,37 +12,56 @@ export const HeroContent = ({ userName, onLogout }: HeroContentProps) => {
 
   return (
     <Paper
-      elevation={6}
+      elevation={0}
       sx={{
-        p: { xs: 3, sm: 4 },
-        backgroundColor: "rgba(255, 255, 255, 0.85)",
-        borderRadius: "24px",
-        maxWidth: "520px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100%",
         width: "100%",
-        backdropFilter: "blur(4px)",
+        justifyContent: { xs: "center", sm: "space-evenly", lg: "center" },
+        py: { xs: 2, sm: 3, lg: 1.5 },
+        px: { xs: 1.5, sm: 2 },
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: "32px",
+        background: "linear-gradient(to left, #514a9d, #24c6dc)",
+        color: "white",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+        textAlign: "center",
       }}
     >
       <Typography
         variant="h4"
         component="h1"
-        gutterBottom
         sx={{
-          fontWeight: "bold",
-          color: "#1976d2",
-          fontSize: { xs: "1.75rem", sm: "2.5rem" },
+          mb: 1,
+          fontWeight: 800,
+          color: "white",
+
+          fontSize: { xs: "1.4rem", sm: "2rem", lg: "2.1rem" },
+          lineHeight: 1.4,
         }}
       >
-        {userName
-          ? `Welcome back, ${userName.split(" ")[0]}!`
-          : "Discover Amazing Events"}
+        {userName ? (
+          <>
+            Welcome back, <br /> {userName.split(" ")[0]}!
+          </>
+        ) : (
+          <>
+            Discover <br /> Amazing Events
+          </>
+        )}
       </Typography>
 
       <Typography
-        variant="h6"
-        color="text.secondary"
+        variant="body2"
         sx={{
-          mb: 4,
-          fontSize: { xs: "1rem", sm: "1.25rem" },
+          mb: 2.5,
+          color: "rgba(255, 255, 255, 0.6)",
+          maxWidth: "340px",
+          fontWeight: 300,
           lineHeight: 1.4,
         }}
       >
@@ -53,20 +73,25 @@ export const HeroContent = ({ userName, onLogout }: HeroContentProps) => {
       <Box
         sx={{
           display: "flex",
-          gap: { xs: 1.5, sm: 2 },
-          flexDirection: { xs: "column", sm: "row" },
+          gap: 1.5,
+          flexDirection: { xs: "column", sm: "column", md: "row" },
+          alignItems: "center",
+          mt: { sm: 4, lg: 0 },
         }}
       >
         <Button
           variant="contained"
-          size="large"
+          size="medium"
           onClick={() => navigate("/events")}
+          endIcon={<ArrowRight size={16} />}
           sx={{
             textTransform: "none",
             borderRadius: "12px",
             fontWeight: 600,
-            px: { xs: 2, sm: 3.5 },
-            py: { xs: 1, sm: 1.5 },
+            px: { xs: 1.2, sm: 2.5 },
+            py: 1.8,
+            background: "linear-gradient(360deg, #514a9d, #24c6dc)",
+
           }}
         >
           Explore Events
@@ -75,13 +100,15 @@ export const HeroContent = ({ userName, onLogout }: HeroContentProps) => {
         {userName ? (
           <Button
             variant="outlined"
-            size="large"
+            size="small"
             onClick={onLogout}
             sx={{
+              px: { xs: 1, sm: 2.5 },
+              py: 1.8,
               textTransform: "none",
               borderRadius: "12px",
-              borderWidth: "2px",
-              "&:hover": { borderWidth: "2px" },
+              borderColor: "rgba(255, 255, 255, 0.93)",
+              color: "#fff",
             }}
           >
             Sign Out
@@ -89,14 +116,15 @@ export const HeroContent = ({ userName, onLogout }: HeroContentProps) => {
         ) : (
           <Button
             variant="outlined"
-            size="large"
+            size="medium"
             onClick={() => navigate("/login")}
             sx={{
+              px: { xs: 1, sm: 2.5 },
+              py: 1.8,
               textTransform: "none",
               borderRadius: "12px",
-              borderWidth: "2px",
-              px: 4,
-              "&:hover": { borderWidth: "2px" },
+              borderColor: "rgba(255, 255, 255, 0.93)",
+              color: "#fff",
             }}
           >
             Sign In

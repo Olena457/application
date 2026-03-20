@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Box, Container, Toolbar, IconButton } from "@mui/material";
 import { Menu } from "lucide-react";
+
 
 import { logout } from "../store/slices/authSlice";
 import type { RootState } from "../store";
@@ -15,11 +16,13 @@ import { useNavStyles } from "../hooks/useNavStyles";
 export default function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { navButtonStyle, isActive } = useNavStyles();
 
   const user = useSelector((state: RootState) => state.auth.user);
   const token = useSelector((state: RootState) => state.auth.token);
+
 
   const handleLogout = () => {
     dispatch(logout());
@@ -27,20 +30,23 @@ export default function Layout() {
   };
 
   const displayName = user?.name || user?.email || "Guest";
+  const isHomePage = location.pathname === "/" || location.pathname === "/home";
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         position="fixed"
         sx={{
-          backgroundImage:
-            "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
-          backgroundColor: "transparent",
+          backgroundImage: isHomePage
+            ? "none"
+            : "linear-gradient(to bottom, #1e88e5 0%, #0d47a1 100%)",
+          backgroundColor: isHomePage ? "transparent" : "#0d47a1",
           color: "white",
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          boxShadow: "none",
+          boxShadow: isHomePage ? "none" : "0px 2px 10px rgba(0,0,0,0.1)",
           paddingTop: "8px",
           paddingBottom: "8px",
+          transition: "all 0.3s ease",
         }}
       >
         <Toolbar
@@ -74,7 +80,10 @@ export default function Layout() {
               sx={{
                 display: { sm: "none" },
                 ml: 1,
-                color: "white",
+                color: isHomePage ? "#57a8ef" : "white",
+                visibility: mobileOpen ? "hidden" : "visible",
+                transition: "visibility 0.3s",
+                
               }}
             >
               <Menu size={28} />
@@ -91,17 +100,23 @@ export default function Layout() {
         handleLogout={handleLogout}
       />
 
-      <Container
-        maxWidth="xl"
+      <Box
+        component="main"
         sx={{
-          mt: {
-            xs: 11,
-            lg: 12,
-          },
+          overflow: isHomePage ? "hidden" : "visible",
+          mt: isHomePage ? 0 : { xs: 11, lg: 12 },
+          width: "100%",
+          height: isHomePage ? "100vh" : "auto",
         }}
       >
-        <Outlet />
-      </Container>
+        {isHomePage ? (
+          <Outlet />
+        ) : (
+          <Container maxWidth="xl">
+            <Outlet />
+          </Container>
+        )}
+      </Box>
     </Box>
   );
 }

@@ -37,6 +37,8 @@ export const MobileMenu = ({
 }: MobileMenuProps) => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
+    const isHomePage = location.pathname === "/" || location.pathname === "/home";
+
 
   const menuItems = [
     { text: "Events", path: "/events", icon: <ListIcon size={20} /> },
@@ -53,19 +55,19 @@ export const MobileMenu = ({
   ];
 
   return (
- <Drawer 
-  anchor="right" 
-  open={open} 
-  onClose={onClose}
-  sx={{
-    display: { xs: 'block', sm: 'none' },
-    '& .MuiDrawer-paper': {
-      width: 280,
-      backgroundColor: "#f8f9fa",
-    },
-  }}
->
-
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={onClose}
+      sx={{
+        display: { xs: "block", sm: "none" },
+        "& .MuiDrawer-paper": {
+          width: 280,
+          backgroundColor: "#f8f9fa",
+        },
+        
+      }}
+    >
       <Box
         sx={{
           width: 280,
@@ -96,7 +98,7 @@ export const MobileMenu = ({
           <IconButton
             onClick={onClose}
             size="small"
-            sx={{ color: "text.secondary", mt: 1 }}
+            sx={{ color: isHomePage ? "#57a8ef" : "white" }}
           >
             <X size={24} />
           </IconButton>

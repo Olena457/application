@@ -10,7 +10,6 @@ interface DesktopNavProps {
   navButtonStyle: (path: string) => object;
   handleLogout: () => void;
 }
-
 export const DesktopNav = ({
   token,
   userName,

@@ -56,7 +56,6 @@ export default function MyEventsPage() {
     }
   };
 
-  // if (isLoading) return <Typography sx={{ p: 4 }}>Loading...</Typography>;
   if (isLoading) return <Loader />;
 
   return (

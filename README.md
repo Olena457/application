@@ -5,18 +5,17 @@ Full-stack event management application with authentication, public event listin
 
 ## Gallery
 
-<!-- <div style="display: flex; flex-wrap: wrap; gap:1px;">
-  <img src="./apps/frontend/src/assets/welcom.jpg" width="25%" height="125px" alt="Welcome Screen"/>
-  <img src="./apps/frontend/src/assets/edit.jpg" width="25%" height="125px" alt="Edit Event"/>
+<div style="display: flex; flex-wrap: wrap; gap:1px;">
+  <img src="./apps/frontend/src/assets/events.jpg" width="25%" height="125px" alt="Edit Event"/>
+  <img src="./apps/frontend/src/assets/home.jpg" width="25%" height="125px" alt="Welcome Screen"/>
   <img src="./apps/frontend/src/assets/calendar.jpg" width="25%" height="125px" alt="Events Calendar"/>
   
-  <img src="./apps/frontend/src/assets/join.jpg" width="25%" height="125px" alt="Join Event"/>
  
-  <img src="./apps/frontend/src/assets/scedule.jpg" width="25%" height="125px" alt="Schedule View"/>
-  <img src="./apps/frontend/src/assets/swager.jpg" width="25%" height="125px" alt="Swagger"/>
-  <img src="./apps/frontend/src/assets/docker.jpg" width="25%" height="125px" alt="Swagger"/>
-  <img src="./apps/frontend/src/assets/work.jpg" width="25%" height="125px" alt="Swagger"/>
-</div> -->
+  <img src="./apps/frontend/src/assets/small.jpg" width="25%" height="125px" alt="Schedule View"/>
+  <img src="./apps/frontend/src/assets/swager-new.jpg" width="25%" height="125px" alt="Swagernew"/>
+  <img src="./apps/frontend/src/assets/answer.jpg" width="25%" height="125px" alt="Answer"/>
+  <img src="./apps/frontend/src/assets/docker.jpg" width="25%" height="125px" alt="Docker"/>
+</div>
 
 
 ## Tech Stack
@@ -34,6 +33,7 @@ Full-stack event management application with authentication, public event listin
 - Prisma + PostgreSQL 
 - JWT Authentication
 - Swagger API Documentation
+- Mistral
 
 ### Infrastructure
 - Docker Compose
@@ -199,6 +199,10 @@ You can find the official images for this project here:
 
 ## Features
 
+
+## AI Integration
+
+- **Mistral AI Monitoring**: Integrated Mistral AI for real-time event monitoring.
 - **Authentication**: Sign up, login, JWT sessions
 - **Events List**: Public events with Join/Leave
 - **Event Details**: Full info, participants, Edit/Delete for organizer

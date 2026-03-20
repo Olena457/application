@@ -187,17 +187,7 @@ export default function EventsListPage() {
         >
           Discover Events
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{
-            mb: 2,
-            fontSize: { xs: "0.70rem", sm: "0.875rem" },
-            lineHeight: { xs: 1.2, sm: 1.43 },
-          }}
-        >
-          Find and join exciting events happening around you
-        </Typography>
+      
       </Box>
       <Box
         sx={{

@@ -24,6 +24,16 @@ export const Logo = () => (
       alt="Logo"
       sx={{ height: { xs: 24, sm: 28 } }}
     />
-    <Box component="span">Event Platform</Box>
+    <Box
+      component="span"
+      sx={{
+        background: "linear-gradient(90deg, #a5d6ff 0%, #85bdec 100%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        display: "inline-block",
+      }}
+    >
+      Event Platform
+    </Box>
   </Typography>
 );
