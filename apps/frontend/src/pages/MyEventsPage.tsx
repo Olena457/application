@@ -83,7 +83,43 @@ export default function MyEventsPage() {
             p: 2,
             borderRadius: 2,
             "& .rbc-event": { border: "none", outline: "none !important" },
-            "& .rbc-today": { backgroundColor: "transparent !important" },
+            "& .rbc-date-cell": {
+              textAlign: "left",
+              padding: "8px",
+              fontSize: { xs: "0.8rem", sm: "0.9rem" },
+              color: "#6b7280",
+              display: "flex",
+              justifyContent: "flex-start",
+            },
+            
+            "& .rbc-today": {
+              backgroundColor: "transparent !important",
+              position: "relative",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "3px",
+                backgroundColor: "#1976d2",
+                zIndex: 2,
+              },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: "3px",
+                backgroundColor: "#1976d2",
+                zIndex: 2,
+              },
+            },
+            "& .rbc-off-range-bg": {
+              backgroundColor: "#eef0f3",
+              opacity: 0.7,
+            },
           }}
         >
           <Calendar
