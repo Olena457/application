@@ -63,8 +63,14 @@ export default function LoginPage() {
               component="h1"
               gutterBottom
               sx={{
+                display: "inline-block",
+                width: "fit-content",
                 mb: 4,
-                fontWeight: 700,
+                fontWeight: 600,
+                fontSize: {
+                  xs: "1.75rem",
+                  sm: "2.125rem",
+                },
                 background: `linear-gradient(135deg, ${DEEP_OCEAN[0]} 10%, ${DEEP_OCEAN[1]} 90%)`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",

@@ -47,10 +47,14 @@ export default function EventsListPage() {
   const token = useSelector((state: RootState) => state.auth.token);
   const userId = useSelector((state: RootState) => state.auth.user?.id);
 
-  const { data, isLoading, error, refetch } = useGetPublicEventsQuery(page, {
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+  } = useGetPublicEventsQuery(page, {
     refetchOnMountOrArgChange: true,
   });
-
   const [joinEvent, { isLoading: isJoining }] = useJoinEventMutation();
   const [leaveEvent, { isLoading: isLeaving }] = useLeaveEventMutation();
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
@@ -79,7 +83,6 @@ export default function EventsListPage() {
           e.title.toLowerCase().includes(q) ||
           e.location.toLowerCase().includes(q);
 
-        
         const matchesTags =
           selectedTags.length === 0 ||
           selectedTags.some((selectedTag) =>
@@ -101,7 +104,7 @@ export default function EventsListPage() {
           }) ?? false,
         isOrganizer: String(event.organizerId) === String(userId),
       }));
-  }, [events, searchQuery, userId, selectedTags]); 
+  }, [events, searchQuery, userId, selectedTags]);
 
   const handleJoinAction = async (eventId: string) => {
     if (!token) {
@@ -187,7 +190,6 @@ export default function EventsListPage() {
         >
           Discover Events
         </Typography>
-      
       </Box>
       <Box
         sx={{

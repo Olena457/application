@@ -52,7 +52,7 @@ export default function Layout() {
         <Toolbar
           sx={{
             justifyContent: "space-between",
-            px: { xs: 2, sm: 5 },
+            px: { xs: 3, sm: 5 },
             minHeight: { xs: "56px", sm: "64px" },
           }}
         >

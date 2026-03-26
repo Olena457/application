@@ -15,7 +15,7 @@ import { EventCard } from "../components/EventCard";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { AuthAlert } from "../components/AuthAlert";
 import { ParticipantsList } from "../components/ParticipantsList";
-import { EventDetailsSkeleton } from "../components/EventDetailsSkeleton";
+import { Loader} from "../components/Loader";
 
 export default function EventDetailsPage() {
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ export default function EventDetailsPage() {
     }
   };
 
-  if (isLoading) return <EventDetailsSkeleton />;
+  if (isLoading) return <Loader />;
 
   if (error || !event) {
     return (

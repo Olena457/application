@@ -59,13 +59,13 @@ export const MobileMenu = ({
       anchor="right"
       open={open}
       onClose={onClose}
+      ModalProps={{ keepMounted: true }}
       sx={{
         display: { xs: "block", sm: "none" },
         "& .MuiDrawer-paper": {
           width: 280,
           backgroundColor: "#f8f9fa",
         },
-        
       }}
     >
       <Box
@@ -98,7 +98,7 @@ export const MobileMenu = ({
           <IconButton
             onClick={onClose}
             size="small"
-            sx={{ color: isHomePage ? "#57a8ef" : "white" }}
+            sx={{ color: isHomePage ? "#57a8ef" : "#000" }}
           >
             <X size={24} />
           </IconButton>

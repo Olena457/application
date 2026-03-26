@@ -14,7 +14,7 @@ import type { EventFormData } from "../utils/event.validation";
 
 import { formatEventPayload } from "../utils/eventHelpers";
 import { getApiErrorMessage } from "../utils/errorHelpers";
-import { EventDetailsSkeleton } from "../components/EventDetailsSkeleton";
+import { Loader } from "../components/Loader";
 import { ArrowLeft } from "lucide-react";
 
 
@@ -50,7 +50,7 @@ export default function EditEventPage() {
     }
   };
 
-  if (isLoading) return <EventDetailsSkeleton />;
+  if (isLoading) return <Loader />;
 
   if (error || !event) {
     return (
