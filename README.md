@@ -14,6 +14,7 @@ Full-stack event management application with authentication, public event listin
   <img src="./apps/frontend/src/assets/small.jpg" width="25%" height="125px" alt="Schedule View"/>
   <img src="./apps/frontend/src/assets/swager-new.jpg" width="25%" height="125px" alt="Swagernew"/>
   <img src="./apps/frontend/src/assets/answer.jpg" width="25%" height="125px" alt="Answer"/>
+  <img src="./apps/frontend/src/assets/docker.jpg" width="25%" height="125px" alt="Form"/>
   <img src="./apps/frontend/src/assets/created.jpg" width="25%" height="125px" alt="Form"/>
   <img src="./apps/frontend/src/assets/login.jpg" width="25%" height="125px" alt="Form"/>
 </div>
