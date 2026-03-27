@@ -99,7 +99,7 @@ export default function EventDetailsPage() {
   }
 
   return (
-    <Box sx={{ py: 4 }}>
+    <Box sx={{py:{ xs: 7, md: 13 }, px:{ xs: 1, md: 4 } }}>
       <Box
         sx={{
           display: "grid",
@@ -124,7 +124,7 @@ export default function EventDetailsPage() {
           />
         </Box>
 
-        <ParticipantsList participants={event.participants || []} />
+        <ParticipantsList  participants={event.participants || []} />
       </Box>
 
       <ConfirmDialog

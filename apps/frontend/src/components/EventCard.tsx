@@ -70,9 +70,36 @@ export const EventCard = ({
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        borderRadius: 2,
-        transition: "transform 0.3s ease",
-        "&:hover": { transform: "translateY(-5px)" },
+        borderRadius: 4,
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: "#fff",
+        transition: "box-shadow 0.3s ease",
+        cursor: "pointer",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background:
+            "linear-gradient(135deg, rgba(30, 136, 229, 0.20) 0%, rgba(255, 255, 255, 0) 50%)",
+          opacity: 0,
+          transition: "opacity 0.4s ease, transform 0.4s ease",
+          zIndex: 0,
+        },
+        "&:hover, &:focus-within": {
+          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+          "&::before": {
+            opacity: 1,
+          },
+        },
+
+        "& > *": {
+          position: "relative",
+          zIndex: 1,
+        },
       }}
     >
       <CardContent sx={{ flexGrow: 1, px: 2, py: 2 }}>
